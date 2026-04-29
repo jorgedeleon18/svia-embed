@@ -328,14 +328,21 @@ function hideError() {
 // ══════════════════════════════════════════════════════════
 // LOGIN
 // ══════════════════════════════════════════════════════════
+
+
 async function leerEmpleados() {
-  const res = await fetch(FLOW_LEER_EMPLEADOS, {
-    method: 'POST', headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({}),
-  });
+  const res = await fetch(FLOW_LEER_EMPLEADOS, { method: 'POST' });
   if (!res.ok) throw new Error('Error ' + res.status);
   const data = await res.json();
-  return data.value || data || [];
+  return (data.value || []).map(item => ({
+    sp_id:   item.ID,
+    titulo:  item.Title || '',
+    legajo:  item.Legajo || '',
+    rol:     spStr(item.Rol),
+    activo:  spStr(item.Activo),
+    // Cuenta_Microsoft puede venir como objeto con Email o como string
+    email:   (item.Cuenta_Microsoft?.Email || item.Cuenta_Microsoft || item.Email || '').toLowerCase(),
+  }));
 }
 
 async function verificarYEntrar(email) {
