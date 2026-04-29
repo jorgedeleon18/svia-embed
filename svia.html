@@ -4,155 +4,148 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>SVIA Eventualidades</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Encode+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@azure/msal-browser@3.28.0/lib/msal-browser.min.js"></script>
 <style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: 'Segoe UI', system-ui, sans-serif; background: #0d1b2a; color: #e0e6ed; min-height: 100vh; }
+:root {
+  --aub:#00AEC3; --aub-dark:#00759A; --aub-darker:#024560;
+  --aub-light:#E0F6FA; --aub-pale:#F0FAFB;
+  --gray:#838383; --gray-light:#F4F4F4; --gray-bg:#F0F2F5;
+  --gray-border:#DDE3E8; --gray-dark:#2A2A2A;
+  --verde:#22a954; --verde-light:#D6F5E8; --verde-dark:#0A5C30;
+  --amber:#F0A500; --amber-light:#FFF3CD; --amber-dark:#7A5200;
+  --rojo:#be1717; --rojo-light:#FADEDE; --rojo-dark:#7A1010;
+  --sb-bg:#022D40; --fn:'Encode Sans',system-ui,sans-serif;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; font-family: var(--fn); background: var(--gray-bg); color: var(--gray-dark); font-size: 14px; }
 
-  /* ── LOGIN ── */
-  #loginScreen {
-    min-height: 100vh; display: flex; align-items: center; justify-content: center;
-    background: linear-gradient(135deg, #0d1b2a 0%, #1a3a5c 100%);
-  }
-  .card {
-    background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.12);
-    border-radius: 16px; padding: 40px 36px; width: 100%; max-width: 420px;
-    backdrop-filter: blur(12px);
-  }
-  .logo-text { font-size: 28px; font-weight: 800; color: #fff; letter-spacing: 2px; text-align: center; display: block; }
-  .card-title { font-size: 18px; font-weight: 600; color: #e0e6ed; text-align: center; margin-top: 6px; }
-  .card-sub { font-size: 13px; color: #7ec8d8; text-align: center; margin-top: 4px; }
-  .divider { border: none; border-top: 1px solid rgba(255,255,255,0.12); margin: 20px 0; }
-  .btn-microsoft {
-    width: 100%; padding: 13px; border-radius: 8px; border: none; cursor: pointer;
-    background: #fff; color: #222; font-size: 15px; font-weight: 600;
-    display: flex; align-items: center; justify-content: center; gap: 10px;
-    transition: background 0.2s;
-  }
-  .btn-microsoft:hover { background: #f0f0f0; }
-  .btn-microsoft:disabled { opacity: 0.6; cursor: not-allowed; }
-  .sep { text-align: center; color: #7ec8d8; font-size: 13px; margin: 16px 0; position: relative; }
-  .sep::before, .sep::after {
-    content: ''; position: absolute; top: 50%; width: 38%; height: 1px;
-    background: rgba(255,255,255,0.12);
-  }
-  .sep::before { left: 0; } .sep::after { right: 0; }
-  .field { margin-bottom: 14px; }
-  .field label { display: block; font-size: 12px; font-weight: 600; color: #7ec8d8; margin-bottom: 6px; letter-spacing: 0.5px; }
-  .field input {
-    width: 100%; padding: 11px 14px; border-radius: 8px;
-    border: 1px solid rgba(255,255,255,0.15); background: rgba(255,255,255,0.08);
-    color: #e0e6ed; font-size: 14px; outline: none;
-  }
-  .field input:focus { border-color: #00bcd4; }
-  .btn-ingresar {
-    width: 100%; padding: 13px; border-radius: 8px; border: none; cursor: pointer;
-    background: linear-gradient(90deg, #00bcd4, #0288d1); color: #fff;
-    font-size: 15px; font-weight: 700; margin-top: 4px; transition: opacity 0.2s;
-  }
-  .btn-ingresar:hover { opacity: 0.88; }
-  .btn-ingresar:disabled { opacity: 0.6; cursor: not-allowed; }
-  .error-msg { background: rgba(211,47,47,0.18); border: 1px solid #d32f2f; color: #ff8a80; border-radius: 8px; padding: 10px 14px; font-size: 13px; margin-bottom: 12px; }
-  .hint { text-align: center; color: rgba(255,255,255,0.35); font-size: 12px; margin-top: 16px; }
+/* ── LOGIN ── */
+#loginScreen {
+  min-height: 100vh; display: flex; align-items: center; justify-content: center;
+  background: linear-gradient(135deg, #022D40 0%, #024560 40%, #00759A 75%, #00AEC3 100%);
+}
+.card {
+  background: rgba(255,255,255,0.10); border: 1px solid rgba(255,255,255,0.22);
+  border-radius: 20px; padding: 40px 36px; width: 100%; max-width: 390px;
+  box-shadow: 0 8px 48px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.15);
+  text-align: center; backdrop-filter: blur(18px);
+}
+.logo-text { font-size: 26px; font-weight: 800; color: #fff; letter-spacing: 1px; display: block; margin-bottom: 14px; }
+.card-title { font-size: 18px; font-weight: 700; color: #fff; margin-bottom: 4px; }
+.card-sub { font-size: 12px; color: rgba(255,255,255,0.5); margin-bottom: 20px; }
+.divider { height: 1px; background: rgba(255,255,255,0.15); border: none; margin-bottom: 20px; }
+.btn-microsoft {
+  width: 100%; padding: 13px; border-radius: 10px; border: none; cursor: pointer;
+  background: rgba(255,255,255,0.95); color: #222; font-size: 14px; font-weight: 700;
+  font-family: var(--fn); display: flex; align-items: center; justify-content: center;
+  gap: 10px; transition: background 0.2s; margin-bottom: 16px;
+}
+.btn-microsoft:hover { background: #fff; }
+.btn-microsoft:disabled { opacity: 0.6; cursor: not-allowed; }
+.sep {
+  text-align: center; color: rgba(255,255,255,0.4); font-size: 12px;
+  margin: 4px 0 14px; position: relative;
+}
+.sep::before, .sep::after {
+  content: ''; position: absolute; top: 50%; width: 36%; height: 1px;
+  background: rgba(255,255,255,0.15);
+}
+.sep::before { left: 0; } .sep::after { right: 0; }
+.form { display: flex; flex-direction: column; gap: 10px; margin-bottom: 16px; text-align: left; }
+.field label { display: block; font-size: 10px; font-weight: 700; color: rgba(255,255,255,0.6); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }
+.field input { width: 100%; padding: 10px 13px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.1); color: #fff; font-size: 13px; font-family: var(--fn); outline: none; }
+.field input::placeholder { color: rgba(255,255,255,0.35); }
+.field input:focus { border-color: var(--aub); background: rgba(255,255,255,0.15); }
+.error-msg { background: rgba(190,23,23,0.2); border: 1px solid rgba(190,23,23,0.4); color: #fca5a5; border-radius: 8px; padding: 9px 13px; font-size: 12px; margin-bottom: 10px; }
+.btn-ingresar { width: 100%; padding: 13px; border-radius: 10px; border: none; cursor: pointer; background: var(--aub); color: #fff; font-size: 14px; font-weight: 700; font-family: var(--fn); transition: background 0.2s; margin-top: 4px; }
+.btn-ingresar:hover:not(:disabled) { background: var(--aub-dark); }
+.btn-ingresar:disabled { opacity: 0.7; cursor: not-allowed; }
+.hint { font-size: 11px; color: rgba(255,255,255,0.4); margin-top: 14px; }
 
-  /* ── APP ── */
-  #appScreen { display: none; }
-  .app-wrap { display: flex; min-height: 100vh; }
+/* ── APP ── */
+#appScreen { display: none; }
+.app-wrap { display: flex; height: 100vh; overflow: hidden; }
 
-  /* Sidebar */
-  .sidebar {
-    width: 220px; background: #0a1628; border-right: 1px solid rgba(255,255,255,0.08);
-    display: flex; flex-direction: column; padding: 20px 0; flex-shrink: 0;
-  }
-  .sidebar-brand { padding: 0 20px 20px; border-bottom: 1px solid rgba(255,255,255,0.08); }
-  .sidebar-brand span { font-size: 18px; font-weight: 800; color: #00bcd4; letter-spacing: 1px; }
-  .sidebar-brand p { font-size: 11px; color: rgba(255,255,255,0.4); margin-top: 2px; }
-  .nav-section { padding: 16px 20px 6px; font-size: 10px; font-weight: 700; color: rgba(255,255,255,0.3); letter-spacing: 1px; }
-  .nav-item {
-    display: flex; align-items: center; gap: 10px; padding: 10px 20px;
-    color: rgba(255,255,255,0.6); font-size: 14px; cursor: pointer; border-radius: 0;
-    transition: all 0.15s; border-left: 3px solid transparent;
-  }
-  .nav-item:hover { background: rgba(255,255,255,0.05); color: #fff; }
-  .nav-item.active { background: rgba(0,188,212,0.1); color: #00bcd4; border-left-color: #00bcd4; }
-  .sidebar-user {
-    margin-top: auto; padding: 16px 20px; border-top: 1px solid rgba(255,255,255,0.08);
-    display: flex; align-items: center; gap: 10px;
-  }
-  .avatar {
-    width: 34px; height: 34px; border-radius: 50%; background: #00bcd4;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 13px; font-weight: 700; color: #0a1628; flex-shrink: 0;
-  }
-  .user-info { flex: 1; min-width: 0; }
-  .user-name { font-size: 13px; font-weight: 600; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .user-rol { font-size: 11px; color: rgba(255,255,255,0.4); text-transform: uppercase; }
-  .btn-logout { background: none; border: none; color: rgba(255,255,255,0.3); cursor: pointer; font-size: 16px; padding: 4px; }
-  .btn-logout:hover { color: #ff5252; }
+/* Sidebar */
+.sidebar { width: 230px; flex-shrink: 0; background: var(--sb-bg); display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
+.sb-brand { padding: 18px 16px 14px; border-bottom: 1px solid rgba(255,255,255,0.07); display: flex; align-items: center; gap: 10px; }
+.sb-brand-title { color: #fff; font-size: 14px; font-weight: 800; letter-spacing: 0.5px; }
+.sb-brand-sep { width: 1px; height: 28px; background: rgba(255,255,255,0.2); flex-shrink: 0; }
+.sb-brand-name { color: #fff; font-size: 12px; font-weight: 700; }
+.sb-brand-sub { color: rgba(255,255,255,0.4); font-size: 9px; text-transform: uppercase; letter-spacing: 0.8px; }
+.sb-nav { padding: 10px 0; flex: 1; overflow-y: auto; }
+.sb-section { font-size: 9px; color: rgba(255,255,255,0.22); text-transform: uppercase; letter-spacing: 1px; padding: 12px 16px 4px; font-weight: 700; }
+.sb-item { display: flex; align-items: center; gap: 9px; padding: 10px 16px; cursor: pointer; color: rgba(255,255,255,0.5); font-size: 12px; font-weight: 500; border-left: 3px solid transparent; transition: all 0.15s; margin: 1px 0; }
+.sb-item:hover { background: rgba(255,255,255,0.06); color: rgba(255,255,255,0.85); }
+.sb-item.active { background: rgba(0,174,195,0.15); color: #fff; border-left-color: var(--aub); }
+.sb-user { padding: 14px 16px; border-top: 1px solid rgba(255,255,255,0.08); display: flex; align-items: center; gap: 10px; }
+.sb-avatar { width: 32px; height: 32px; border-radius: 50%; background: var(--aub); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; flex-shrink: 0; border: 2px solid rgba(255,255,255,0.15); }
+.sb-user-info { flex: 1; min-width: 0; }
+.sb-user-name { color: rgba(255,255,255,0.85); font-size: 12px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.sb-user-role { color: rgba(255,255,255,0.35); font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px; }
+.sb-logout { background: transparent; border: 1px solid rgba(255,255,255,0.12); color: rgba(255,255,255,0.4); padding: 4px 8px; border-radius: 5px; cursor: pointer; font-size: 10px; font-family: var(--fn); transition: all 0.15s; }
+.sb-logout:hover { background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.7); }
 
-  /* Main */
-  .main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
-  .topbar {
-    padding: 18px 28px; border-bottom: 1px solid rgba(255,255,255,0.08);
-    background: #0d1b2a; display: flex; align-items: center; justify-content: space-between;
-  }
-  .topbar-title { font-size: 20px; font-weight: 700; color: #fff; }
-  .topbar-sub { font-size: 13px; color: rgba(255,255,255,0.4); margin-top: 2px; }
-  .content { flex: 1; padding: 24px 28px; overflow-y: auto; }
+/* Main */
+.main { flex: 1; display: flex; flex-direction: column; min-width: 0; overflow: hidden; background: var(--gray-bg); }
+.topbar { display: flex; align-items: center; justify-content: space-between; padding: 13px 24px; border-bottom: 1px solid var(--gray-border); background: #fff; flex-shrink: 0; }
+.topbar-title { font-size: 17px; font-weight: 700; color: var(--gray-dark); }
+.topbar-sub { font-size: 11px; color: var(--gray); margin-top: 2px; font-weight: 500; }
+.content { flex: 1; overflow-y: auto; padding: 22px 24px; background: var(--gray-bg); }
 
-  /* Stats */
-  .stats { display: grid; grid-template-columns: repeat(4,1fr); gap: 16px; margin-bottom: 24px; }
-  .stat-card {
-    background: rgba(255,255,255,0.05); border-radius: 12px; padding: 16px;
-    cursor: pointer; border: 2px solid transparent; transition: all 0.15s;
-  }
-  .stat-card:hover { background: rgba(255,255,255,0.08); }
-  .stat-card.active { border-color: #00bcd4; }
-  .stat-label { font-size: 12px; color: rgba(255,255,255,0.5); font-weight: 600; }
-  .stat-val { font-size: 28px; font-weight: 800; color: #fff; margin: 4px 0; }
-  .stat-sub { font-size: 11px; color: rgba(255,255,255,0.35); }
-  .stat-card.v .stat-val { color: #4caf50; }
-  .stat-card.a .stat-val { color: #ff9800; }
-  .stat-card.r .stat-val { color: #f44336; }
+/* Stats */
+.stats { display: grid; grid-template-columns: repeat(4,1fr); gap: 12px; margin-bottom: 18px; }
+.sc { background: #fff; border-radius: 10px; padding: 14px 16px; border: 1px solid var(--gray-border); position: relative; overflow: hidden; cursor: pointer; transition: all 0.18s; user-select: none; }
+.sc:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
+.sc.active { box-shadow: 0 0 0 3px currentColor inset; }
+.sc::before { content:''; position:absolute; left:0; top:0; bottom:0; width:4px; border-radius:4px 0 0 4px; }
+.sc-aub::before { background: var(--aub); }
+.sc-v::before   { background: var(--verde); }
+.sc-a::before   { background: var(--amber); }
+.sc-r::before   { background: var(--rojo); }
+.sc-aub.active { background: #E0F6FA; border-color: var(--aub); }
+.sc-v.active   { background: #D6F5E8; border-color: var(--verde); }
+.sc-a.active   { background: #FFF3CD; border-color: var(--amber); }
+.sc-r.active   { background: #FADEDE; border-color: var(--rojo); }
+.sc-label { font-size: 11px; color: var(--gray); margin-bottom: 6px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.4px; }
+.sc-val { font-size: 28px; font-weight: 800; color: var(--gray-dark); line-height: 1; }
+.sc-sub { font-size: 10px; color: #b0bac4; margin-top: 5px; font-weight: 500; }
 
-  /* Table */
-  .tw { background: rgba(255,255,255,0.04); border-radius: 12px; overflow: hidden; }
-  .tw-header {
-    padding: 16px 20px; display: flex; align-items: center; justify-content: space-between;
-    border-bottom: 1px solid rgba(255,255,255,0.08);
-  }
-  .tw-title { font-size: 15px; font-weight: 700; color: #fff; }
-  .filter-row { display: flex; gap: 6px; }
-  .fc {
-    padding: 5px 12px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.15);
-    background: transparent; color: rgba(255,255,255,0.5); font-size: 12px; cursor: pointer;
-  }
-  .fc.on { background: #00bcd4; border-color: #00bcd4; color: #fff; font-weight: 600; }
-  table { width: 100%; border-collapse: collapse; }
-  th { padding: 12px 16px; text-align: left; font-size: 11px; font-weight: 700; color: rgba(255,255,255,0.4); letter-spacing: 0.5px; border-bottom: 1px solid rgba(255,255,255,0.08); }
-  td { padding: 13px 16px; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 13px; }
-  tr.trow { cursor: pointer; transition: background 0.1s; }
-  tr.trow:hover td { background: rgba(255,255,255,0.03); }
-  .td-main { font-weight: 600; color: #e0e6ed; }
-  .td-id { font-size: 11px; color: rgba(255,255,255,0.35); margin-top: 2px; }
-  .lugar-chip { background: rgba(0,188,212,0.12); color: #00bcd4; padding: 3px 10px; border-radius: 20px; font-size: 12px; }
-  .hora { font-size: 11px; color: rgba(255,255,255,0.4); margin-top: 2px; }
-  .badge { padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; }
-  .badge-abierto  { background: rgba(76,175,80,0.15);  color: #4caf50; }
-  .badge-pendiente{ background: rgba(255,152,0,0.15);  color: #ff9800; }
-  .badge-cerrado  { background: rgba(244,67,54,0.15);  color: #f44336; }
-  .tec-chip { background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.6); padding: 2px 8px; border-radius: 10px; font-size: 11px; margin-right: 4px; }
-  .empty { text-align: center; color: rgba(255,255,255,0.3); padding: 32px !important; }
-  .loading-txt { text-align: center; color: rgba(255,255,255,0.4); padding: 32px; }
+/* Table */
+.tw { background: #fff; border: 1px solid var(--gray-border); border-radius: 12px; overflow: hidden; }
+.tw-header { display: flex; align-items: center; justify-content: space-between; padding: 14px 18px; border-bottom: 1px solid var(--gray-border); }
+.tw-title { font-size: 13px; font-weight: 700; color: var(--gray-dark); }
+.frow { display: flex; gap: 5px; }
+.fc { font-size: 11px; padding: 5px 12px; border-radius: 20px; border: 1px solid var(--gray-border); background: #fff; color: var(--gray); cursor: pointer; transition: all 0.12s; font-weight: 600; font-family: var(--fn); }
+.fc:hover { border-color: var(--aub); color: var(--aub-dark); }
+.fc.on { background: var(--aub); border-color: var(--aub); color: #fff; }
+table { width: 100%; border-collapse: collapse; }
+thead tr { background: #F7F9FB; }
+th { padding: 10px 16px; text-align: left; font-size: 10px; font-weight: 700; color: var(--gray); text-transform: uppercase; letter-spacing: 0.5px; }
+td { padding: 12px 16px; border-top: 1px solid #F0F2F5; font-size: 12px; vertical-align: middle; color: var(--gray-dark); }
+.trow { cursor: pointer; transition: background 0.12s; }
+.trow:hover td { background: #F5FBFC !important; }
+.trow-abierto td   { background: linear-gradient(90deg,#F0FFF6 0%,#fff 60%); }
+.trow-pendiente td { background: linear-gradient(90deg,#FFFBF0 0%,#fff 60%); }
+.trow-cerrado td   { background: linear-gradient(90deg,#FFF5F5 0%,#fff 60%); }
+.td-main { font-weight: 700; font-size: 13px; color: var(--gray-dark); }
+.td-id { font-size: 10px; color: #b0bac4; margin-top: 2px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.4px; }
+.hora { font-size: 11px; color: var(--aub-dark); font-weight: 600; }
+.lugar-chip { display: inline-flex; align-items: center; gap: 4px; background: var(--aub-light); color: var(--aub-darker); padding: 4px 8px; border-radius: 6px; font-size: 11px; font-weight: 600; border: 1px solid #B0E4EE; }
+.badge { display: inline-flex; align-items: center; font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 20px; letter-spacing: 0.2px; }
+.badge-ab { background: var(--verde-light); color: var(--verde-dark); border: 1px solid var(--verde); }
+.badge-pe { background: var(--amber-light); color: var(--amber-dark); border: 1px solid var(--amber); }
+.badge-ce { background: var(--rojo-light); color: var(--rojo-dark); border: 1px solid var(--rojo); }
+.tecs { display: flex; gap: 4px; flex-wrap: wrap; }
+.tec { font-size: 11px; font-weight: 700; background: var(--aub-light); color: var(--aub-darker); padding: 2px 8px; border-radius: 4px; border: 1px solid #B0E4EE; }
+.empty { text-align: center; padding: 32px; color: var(--gray); font-size: 13px; }
+.loading-txt { text-align: center; padding: 32px; color: var(--gray); font-size: 13px; }
 
-  /* Toast */
-  .toast {
-    position: fixed; bottom: 24px; right: 24px; background: #1e3a5f;
-    border: 1px solid #00bcd4; color: #fff; padding: 12px 20px; border-radius: 10px;
-    font-size: 14px; font-weight: 600; opacity: 0; transform: translateY(10px);
-    transition: all 0.3s; pointer-events: none; z-index: 9999;
-  }
-  .toast.show { opacity: 1; transform: translateY(0); }
+/* Toast */
+.toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(20px); background: #1a2a3a; color: #fff; padding: 10px 20px; border-radius: 10px; font-size: 13px; font-weight: 600; z-index: 9999; opacity: 0; transition: all 0.3s; pointer-events: none; white-space: nowrap; }
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 </style>
 </head>
 <body>
@@ -176,16 +169,17 @@
     </button>
 
     <div class="sep">o ingresá con usuario</div>
-
     <div id="loginError" class="error-msg" style="display:none"></div>
 
-    <div class="field">
-      <label>USUARIO</label>
-      <input type="text" id="inputUser" placeholder="Ej: juan.perez" autocomplete="username">
-    </div>
-    <div class="field">
-      <label>CONTRASEÑA</label>
-      <input type="password" id="inputPass" placeholder="••••••••" autocomplete="current-password" onkeydown="if(event.key==='Enter') handleLogin()">
+    <div class="form">
+      <div class="field">
+        <label>Usuario</label>
+        <input type="text" id="inputUser" placeholder="Ej: juan.perez" autocomplete="username">
+      </div>
+      <div class="field">
+        <label>Contraseña</label>
+        <input type="password" id="inputPass" placeholder="••••••••" autocomplete="current-password" onkeydown="if(event.key==='Enter') handleLogin()">
+      </div>
     </div>
 
     <button class="btn-ingresar" id="btnIngresar" onclick="handleLogin()">Ingresar</button>
@@ -196,27 +190,33 @@
 <!-- ══ APP ══ -->
 <div id="appScreen">
   <div class="app-wrap">
-    <!-- Sidebar -->
     <div class="sidebar">
-      <div class="sidebar-brand">
-        <span>SVIA</span>
-        <p>Técnicos en Sistemas</p>
-      </div>
-      <div class="nav-section">MIS REGISTROS</div>
-      <div class="nav-item active" onclick="mostrarVista('mistareas')">📋 Mis tareas</div>
-      <div class="nav-section">EQUIPO</div>
-      <div class="nav-item" onclick="mostrarVista('reporte')">📊 Reporte de turno</div>
-      <div class="sidebar-user">
-        <div class="avatar" id="avatarInits"></div>
-        <div class="user-info">
-          <div class="user-name" id="userNombre"></div>
-          <div class="user-rol" id="userRol"></div>
+      <div class="sb-brand">
+        <div>
+          <div class="sb-brand-title">SVIA</div>
         </div>
-        <button class="btn-logout" onclick="logout()" title="Salir">⏻</button>
+        <div class="sb-brand-sep"></div>
+        <div>
+          <div class="sb-brand-name">Técnicos</div>
+          <div class="sb-brand-sub">en sistemas</div>
+        </div>
+      </div>
+      <div class="sb-nav">
+        <div class="sb-section">Mis registros</div>
+        <div class="sb-item active" id="nav-mistareas" onclick="mostrarVista('mistareas')">📋 Mis tareas</div>
+        <div class="sb-section">Equipo</div>
+        <div class="sb-item" id="nav-reporte" onclick="mostrarVista('reporte')">📊 Reporte de turno</div>
+      </div>
+      <div class="sb-user">
+        <div class="sb-avatar" id="avatarInits"></div>
+        <div class="sb-user-info">
+          <div class="sb-user-name" id="userNombre"></div>
+          <div class="sb-user-role" id="userRol"></div>
+        </div>
+        <button class="sb-logout" onclick="logout()">Salir</button>
       </div>
     </div>
 
-    <!-- Main -->
     <div class="main">
       <div class="topbar">
         <div>
@@ -234,143 +234,63 @@
 <div class="toast" id="toast"></div>
 
 <script>
-// ══════════════════════════════════════════════════════════
-// CONFIGURACIÓN
-// ══════════════════════════════════════════════════════════
 const CLIENT_ID  = 'ec6b52bb-eb56-43d5-879b-a195a5a4ada4';
 const TENANT_ID  = '9444ead0-9771-4ed8-a608-802faff70d4f';
+const REDIRECT   = 'https://jorgedeleon18.github.io/svia-embed/';
 const LOGIN_SCOPES = ['User.Read', 'openid', 'profile'];
 
-const FLOW_LEER            = 'https://default9444ead097714ed8a608802faff70d.4f.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/fa99280fd7644fc598b17be2adfafa0c/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=8Iboy7McipsVlswWfjvJtY0bBzD-c-Nlb6LFrUOTM10';
-const FLOW_LEER_EMPLEADOS  = 'https://default9444ead097714ed8a608802faff70d.4f.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/93d95412c47e4b169c1799d22be6aab5/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=4T6L8G6eveqM1jGSFCu5SYJTVcIKVeGn_Q6qN3qsptM';
+const FLOW_LEER           = 'https://default9444ead097714ed8a608802faff70d.4f.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/fa99280fd7644fc598b17be2adfafa0c/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=8Iboy7McipsVlswWfjvJtY0bBzD-c-Nlb6LFrUOTM10';
+const FLOW_LEER_EMPLEADOS = 'https://default9444ead097714ed8a608802faff70d.4f.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/93d95412c47e4b169c1799d22be6aab5/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=4T6L8G6eveqM1jGSFCu5SYJTVcIKVeGn_Q6qN3qsptM';
 
-// Estado global
 let usuarioActual = null;
 let eventualidades = [];
 let filtroActual = 'todos';
 let msalInstance = null;
 
-// ══════════════════════════════════════════════════════════
-// MSAL
-// ══════════════════════════════════════════════════════════
 try {
   msalInstance = new msal.PublicClientApplication({
-    auth: {
-      clientId:    CLIENT_ID,
-      authority:   `https://login.microsoftonline.com/${TENANT_ID}`,
-      redirectUri: 'https://jorgedeleon18.github.io/svia-embed/',
-    },
+    auth: { clientId: CLIENT_ID, authority: `https://login.microsoftonline.com/${TENANT_ID}`, redirectUri: REDIRECT },
     cache: { cacheLocation: 'sessionStorage' },
   });
 } catch(e) { console.warn('MSAL no disponible:', e); }
 
-// ══════════════════════════════════════════════════════════
-// HELPERS
-// ══════════════════════════════════════════════════════════
-const spStr = (v) => {
-  if (!v) return '';
-  if (typeof v === 'string') return v;
-  if (typeof v === 'object') return v.Value || v.value || v.Label || v.label || '';
-  return String(v);
-};
-
-const mapItem = (item) => {
-  const tec1 = spStr(item.tecnico1);
-  const tec2 = spStr(item.tecnico2);
-  const tec3 = spStr(item.tecnico3);
-  const tec4 = spStr(item.tecnico4);
-  return {
-    id:          'EVT-' + String(item.ID).padStart(3, '0'),
-    sp_id:       item.ID,
-    titulo:      item.Title || '',
-    ft:          item.fecha_de_tarea  ? item.fecha_de_tarea.split('T')[0]  : '',
-    ht:          spStr(item.hora_de_tarea),
-    fc:          item.fecha_de_cierre ? item.fecha_de_cierre.split('T')[0] : '',
-    hc:          spStr(item.hora_de_cierre),
-    estado:      spStr(item.estado) || 'Abierto',
-    turno:       spStr(item.turno) || '',
-    lugarNombre: spStr(item.lugar_de_tarea).split(' · ')[0] || spStr(item.lugar_de_tarea),
-    problema:    spStr(item.detalle_del_problema),
-    solucion:    spStr(item.detalle_de_solucion),
-    tecs:        [tec1, tec2, tec3, tec4].filter(Boolean),
-    owner:       tec1,
-  };
-};
-
-const fmt = (d) => {
-  if (!d) return '—';
-  const [y,m,dia] = d.split('-');
-  return `${dia}/${m}/${y}`;
-};
+// ── Helpers ──
+const spStr = (v) => { if (!v) return ''; if (typeof v === 'string') return v; if (typeof v === 'object') return v.Value || v.value || v.Label || v.label || ''; return String(v); };
+const fmt = (d) => { if (!d) return '—'; const [y,m,dia] = d.split('-'); return `${dia}/${m}/${y}`; };
 
 function badgeCls(estado) {
-  if (estado === 'Abierto')   return 'badge badge-abierto';
-  if (estado === 'Pendiente') return 'badge badge-pendiente';
-  if (estado === 'Cerrado')   return 'badge badge-cerrado';
+  if (estado === 'Abierto')   return 'badge badge-ab';
+  if (estado === 'Pendiente') return 'badge badge-pe';
+  if (estado === 'Cerrado')   return 'badge badge-ce';
   return 'badge';
 }
-
-function showToast(msg) {
-  const t = document.getElementById('toast');
-  t.textContent = msg; t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 2800);
+function rowCls(estado) {
+  if (estado === 'Abierto')   return 'trow trow-abierto';
+  if (estado === 'Pendiente') return 'trow trow-pendiente';
+  if (estado === 'Cerrado')   return 'trow trow-cerrado';
+  return 'trow';
 }
 
-function showError(msg) {
-  const el = document.getElementById('loginError');
-  el.textContent = msg; el.style.display = 'block';
-}
+function showError(msg) { const el = document.getElementById('loginError'); el.textContent = msg; el.style.display = 'block'; }
+function hideError() { document.getElementById('loginError').style.display = 'none'; }
+function showToast(msg) { const t = document.getElementById('toast'); t.textContent = msg; t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 2800); }
 
-function hideError() {
-  document.getElementById('loginError').style.display = 'none';
-}
-
-// ══════════════════════════════════════════════════════════
-// LOGIN
-// ══════════════════════════════════════════════════════════
-
-
+// ── Empleados ──
 async function leerEmpleados() {
   const res = await fetch(FLOW_LEER_EMPLEADOS, { method: 'POST' });
   if (!res.ok) throw new Error('Error ' + res.status);
   const data = await res.json();
   return (data.value || []).map(item => ({
-    sp_id:   item.ID,
-    titulo:  item.Title || '',
-    legajo:  item.Legajo || '',
-    rol:     spStr(item.Rol),
-    activo:  spStr(item.Activo),
-    // Cuenta_Microsoft puede venir como objeto con Email o como string
-    email:   (item.Cuenta_Microsoft?.Email || item.Cuenta_Microsoft || item.Email || '').toLowerCase(),
+    sp_id:  item.ID,
+    titulo: item.Title || '',
+    legajo: item.Legajo || '',
+    rol:    spStr(item.Rol),
+    activo: spStr(item.Activo),
+    email:  (item.Cuenta_Microsoft?.Email || item.Cuenta_Microsoft || item.Email || '').toLowerCase(),
   }));
 }
 
-async function verificarYEntrar(email) {
-  const lista = await leerEmpleados();
-  const emailLower = email.toLowerCase();
-  const emp = lista.find(e => e.email?.toLowerCase() === emailLower);
-
-  if (!emp || emp.activo !== 'Si') {
-    showError('Tu cuenta no tiene acceso o está inactiva. Contactá al administrador.');
-    document.getElementById('btnMicrosoft').disabled = false;
-    document.getElementById('btnMSText').textContent = 'Ingresar con cuenta Microsoft';
-    return;
-  }
-
-  const initials = emp.titulo
-    ? emp.titulo.split(',').map(p => p.trim()[0]).join('').toUpperCase().slice(0,2)
-    : '??';
-
-  usuarioActual = {
-    username: emailLower.split('@')[0],
-    nombre:   emp.titulo,
-    rol:      (emp.rol || '').toLowerCase(),
-    initials, sp_id: emp.sp_id, email: emp.email,
-  };
-
-  await cargarYMostrarApp();
-}
-
+// ── Login Microsoft ──
 async function handleMicrosoft() {
   if (!msalInstance) { showError('MSAL no disponible.'); return; }
   hideError();
@@ -382,43 +302,43 @@ async function handleMicrosoft() {
     await verificarYEntrar(response.account.username);
   } catch(e) {
     console.warn('Login Microsoft error:', e);
-    showError('Error al iniciar sesión con Microsoft. Intentá de nuevo.');
+    showError('Error al iniciar sesión. Intentá de nuevo.');
     document.getElementById('btnMicrosoft').disabled = false;
     document.getElementById('btnMSText').textContent = 'Ingresar con cuenta Microsoft';
   }
 }
 
+async function verificarYEntrar(email) {
+  const lista = await leerEmpleados();
+  const emailLower = email.toLowerCase();
+  const emp = lista.find(e => e.email === emailLower);
+  if (!emp || emp.activo !== 'Si') {
+    showError('Tu cuenta no tiene acceso o está inactiva. Contactá al administrador.');
+    document.getElementById('btnMicrosoft').disabled = false;
+    document.getElementById('btnMSText').textContent = 'Ingresar con cuenta Microsoft';
+    return;
+  }
+  const initials = emp.titulo ? emp.titulo.split(',').map(p => p.trim()[0]).join('').toUpperCase().slice(0,2) : '??';
+  usuarioActual = { username: emailLower.split('@')[0], nombre: emp.titulo, rol: (emp.rol||'').toLowerCase(), initials, sp_id: emp.sp_id, email: emp.email };
+  await cargarYMostrarApp();
+}
+
+// ── Login Manual ──
 async function handleLogin() {
   hideError();
   const username = document.getElementById('inputUser').value.trim();
   const password = document.getElementById('inputPass').value;
   if (!username || !password) { showError('Completá usuario y contraseña.'); return; }
-
   document.getElementById('btnIngresar').disabled = true;
   document.getElementById('btnIngresar').textContent = 'Ingresando...';
-
   try {
     const lista = await leerEmpleados();
-    const emp = lista.find(e =>
-      e.email?.toLowerCase().startsWith(username.toLowerCase()) ||
-      e.titulo?.toLowerCase() === username.toLowerCase()
-    );
-    if (!emp || emp.activo !== 'Si') {
-      showError('Tu cuenta no tiene acceso o está inactiva. Contactá al administrador.');
-      return;
-    }
+    const emp = lista.find(e => e.email?.startsWith(username.toLowerCase()) || e.titulo?.toLowerCase() === username.toLowerCase());
+    if (!emp || emp.activo !== 'Si') { showError('Tu cuenta no tiene acceso o está inactiva.'); return; }
     const passEsp = (emp.legajo ? String(emp.legajo).slice(0,4) : '') + '2026';
-    if (password !== passEsp && password !== 'Tecnicos2026') {
-      showError('Usuario o contraseña incorrectos.');
-      return;
-    }
-    const initials = emp.titulo
-      ? emp.titulo.split(',').map(p => p.trim()[0]).join('').toUpperCase().slice(0,2)
-      : '??';
-    usuarioActual = {
-      username, nombre: emp.titulo, rol: (emp.rol||'').toLowerCase(),
-      initials, sp_id: emp.sp_id, email: emp.email,
-    };
+    if (password !== passEsp && password !== 'Tecnicos2026') { showError('Usuario o contraseña incorrectos.'); return; }
+    const initials = emp.titulo ? emp.titulo.split(',').map(p => p.trim()[0]).join('').toUpperCase().slice(0,2) : '??';
+    usuarioActual = { username, nombre: emp.titulo, rol: (emp.rol||'').toLowerCase(), initials, sp_id: emp.sp_id, email: emp.email };
     await cargarYMostrarApp();
   } catch(e) {
     showError('Error al conectar. Intentá de nuevo.');
@@ -434,47 +354,51 @@ function logout() {
   document.getElementById('loginScreen').style.display = 'flex';
   document.getElementById('inputUser').value = '';
   document.getElementById('inputPass').value = '';
+  hideError();
 }
 
-// ══════════════════════════════════════════════════════════
-// APP
-// ══════════════════════════════════════════════════════════
+// ── App ──
 async function cargarYMostrarApp() {
   document.getElementById('loginScreen').style.display = 'none';
   document.getElementById('appScreen').style.display = 'block';
   document.getElementById('avatarInits').textContent = usuarioActual.initials;
   document.getElementById('userNombre').textContent  = usuarioActual.nombre;
   document.getElementById('userRol').textContent     = usuarioActual.rol.toUpperCase();
-
   document.getElementById('mainContent').innerHTML = '<div class="loading-txt">Cargando eventualidades...</div>';
-
   try {
     const res = await fetch(FLOW_LEER, {
       method: 'POST', headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ usuario: usuarioActual.username, rol: usuarioActual.rol, todos: true }),
     });
     const data = await res.json();
-    eventualidades = (data.value || []).map(mapItem);
-  } catch(e) {
-    console.warn('Error cargando eventualidades:', e);
-    eventualidades = [];
-  }
-
+    eventualidades = (data.value || []).map(item => {
+      const tec1 = spStr(item.tecnico1), tec2 = spStr(item.tecnico2), tec3 = spStr(item.tecnico3), tec4 = spStr(item.tecnico4);
+      return {
+        id: 'EVT-' + String(item.ID).padStart(3,'0'), sp_id: item.ID,
+        titulo: item.Title || '',
+        ft: item.fecha_de_tarea  ? item.fecha_de_tarea.split('T')[0]  : '',
+        ht: spStr(item.hora_de_tarea),
+        estado: spStr(item.estado) || 'Abierto',
+        lugarNombre: spStr(item.lugar_de_tarea).split(' · ')[0] || spStr(item.lugar_de_tarea),
+        tecs: [tec1,tec2,tec3,tec4].filter(Boolean),
+        owner: tec1,
+      };
+    });
+  } catch(e) { console.warn('Error cargando:', e); eventualidades = []; }
   mostrarVista('mistareas');
 }
 
 function mostrarVista(vista) {
-  document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.sb-item').forEach(el => el.classList.remove('active'));
+  document.getElementById('nav-' + vista)?.classList.add('active');
   if (vista === 'mistareas') {
-    document.querySelectorAll('.nav-item')[0].classList.add('active');
     document.getElementById('topTitle').textContent = 'Mis tareas';
     document.getElementById('topSub').textContent   = 'Solo vos podés ver tus registros';
     renderMisTareas();
-  } else if (vista === 'reporte') {
-    document.querySelectorAll('.nav-item')[1].classList.add('active');
+  } else {
     document.getElementById('topTitle').textContent = 'Reporte de turno';
     document.getElementById('topSub').textContent   = 'Acceso compartido';
-    document.getElementById('mainContent').innerHTML = '<div class="loading-txt">Reporte de turno — próximamente</div>';
+    document.getElementById('mainContent').innerHTML = '<div class="loading-txt">Reporte de turno — próximamente en esta versión</div>';
   }
 }
 
@@ -482,79 +406,53 @@ function renderMisTareas() {
   const misTareas = eventualidades.filter(e => {
     if (!usuarioActual) return false;
     if (['admin','supervisor','coordinador','jefatura'].includes(usuarioActual.rol)) return true;
-    return e.owner === usuarioActual.username || e.owner === usuarioActual.nombre ||
-           (e.tecs && e.tecs.includes(usuarioActual.nombre));
+    return e.owner === usuarioActual.username || e.owner === usuarioActual.nombre || (e.tecs && e.tecs.includes(usuarioActual.nombre));
   });
-
-  const counts = {
-    todos:     misTareas.length,
-    Abierto:   misTareas.filter(e => e.estado === 'Abierto').length,
-    Pendiente: misTareas.filter(e => e.estado === 'Pendiente').length,
-    Cerrado:   misTareas.filter(e => e.estado === 'Cerrado').length,
-  };
-
+  const counts = { todos: misTareas.length, Abierto: misTareas.filter(e=>e.estado==='Abierto').length, Pendiente: misTareas.filter(e=>e.estado==='Pendiente').length, Cerrado: misTareas.filter(e=>e.estado==='Cerrado').length };
   const filtered = filtroActual === 'todos' ? misTareas : misTareas.filter(e => e.estado === filtroActual);
 
-  const statsHtml = `
-    <div class="stats">
-      ${[
-        {key:'todos',     label:'Mis registros', sub:'eventualidades',     cls:'aub'},
-        {key:'Abierto',   label:'Abiertas',      sub:'requieren atención', cls:'v'},
-        {key:'Pendiente', label:'Pendientes',    sub:'en seguimiento',     cls:'a'},
-        {key:'Cerrado',   label:'Cerradas',      sub:'finalizadas',        cls:'r'},
-      ].map(s => `
-        <div class="stat-card ${s.cls} ${filtroActual===s.key?'active':''}" onclick="setFiltro('${s.key}')">
-          <div class="stat-label">${s.label}</div>
-          <div class="stat-val">${counts[s.key]}</div>
-          <div class="stat-sub">${s.sub}</div>
-        </div>
-      `).join('')}
-    </div>`;
+  const stats = [
+    {key:'todos',     label:'Mis registros', sub:'eventualidades',     cls:'sc-aub'},
+    {key:'Abierto',   label:'Abiertas',      sub:'requieren atención', cls:'sc-v'},
+    {key:'Pendiente', label:'Pendientes',    sub:'en seguimiento',     cls:'sc-a'},
+    {key:'Cerrado',   label:'Cerradas',      sub:'finalizadas',        cls:'sc-r'},
+  ].map(s => `
+    <div class="sc ${s.cls} ${filtroActual===s.key?'active':''}" onclick="setFiltro('${s.key}')">
+      <div class="sc-label">${s.label}</div>
+      <div class="sc-val">${counts[s.key]}</div>
+      <div class="sc-sub">${s.sub}</div>
+    </div>`).join('');
 
-  const filtersHtml = ['todos','Abierto','Pendiente','Cerrado'].map(f =>
+  const filters = ['todos','Abierto','Pendiente','Cerrado'].map(f =>
     `<button class="fc ${filtroActual===f?'on':''}" onclick="setFiltro('${f}')">${f==='todos'?'Todos':f}</button>`
   ).join('');
 
-  const rowsHtml = filtered.length === 0
+  const rows = filtered.length === 0
     ? `<tr><td colspan="5" class="empty">No hay eventualidades</td></tr>`
     : filtered.map(e => `
-        <tr class="trow">
-          <td>
-            <div class="td-main">${e.titulo}</div>
-            <div class="td-id">${e.id}</div>
-          </td>
-          <td><span class="lugar-chip">🏛 ${e.lugarNombre}</span></td>
-          <td>
-            <div>${fmt(e.ft)}</div>
-            <div class="hora">${e.ht || '—'}</div>
-          </td>
-          <td><span class="${badgeCls(e.estado)}">${e.estado}</span></td>
-          <td>${e.tecs.map(t => `<span class="tec-chip">${t.split(',')[0]}</span>`).join('')}</td>
-        </tr>
-      `).join('');
+      <tr class="${rowCls(e.estado)}">
+        <td><div class="td-main">${e.titulo}</div><div class="td-id">${e.id}</div></td>
+        <td><span class="lugar-chip">🏛 ${e.lugarNombre}</span></td>
+        <td><div>${fmt(e.ft)}</div><div class="hora">${e.ht||'—'}</div></td>
+        <td><span class="${badgeCls(e.estado)}">${e.estado}</span></td>
+        <td><div class="tecs">${e.tecs.map(t=>`<span class="tec">${t.split(',')[0]}</span>`).join('')}</div></td>
+      </tr>`).join('');
 
   document.getElementById('mainContent').innerHTML = `
-    ${statsHtml}
+    <div class="stats">${stats}</div>
     <div class="tw">
       <div class="tw-header">
         <span class="tw-title">Mis eventualidades</span>
-        <div class="filter-row">${filtersHtml}</div>
+        <div class="frow">${filters}</div>
       </div>
       <table>
-        <thead>
-          <tr>
-            <th>Descripción</th><th>Lugar</th><th>Fecha tarea</th><th>Estado</th><th>Técnicos</th>
-          </tr>
-        </thead>
-        <tbody>${rowsHtml}</tbody>
+        <thead><tr><th>Descripción</th><th>Lugar</th><th>Fecha tarea</th><th>Estado</th><th>Técnicos</th></tr></thead>
+        <tbody>${rows}</tbody>
       </table>
     </div>`;
 }
 
-function setFiltro(f) {
-  filtroActual = f;
-  renderMisTareas();
-}
+function setFiltro(f) { filtroActual = f; renderMisTareas(); }
 </script>
 </body>
 </html>
