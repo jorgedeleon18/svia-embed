@@ -35,10 +35,10 @@ body.dark .main{background:#111C24}
 body.dark .topbar{background:#0D1820;border-color:#1E2E3A}
 body.dark .topbar-title{color:#B8C8D4}
 body.dark .topbar-sub{color:#6E8090}
-body.dark .sc,body.dark .tw,body.dark .form-card,body.dark .fc-card,
-body.dark .det-card,body.dark .det-header,body.dark .evt,
-body.dark .filtros,body.dark .kpi-header,body.dark .kpi-card,
-body.dark .ge-header,body.dark .modal-box{background:#0D1820;border-color:#1E2E3A}
+body.dark .evt{background:#0D1820;border-color:#1E2E3A}
+body.dark .evt-abierto{background:linear-gradient(135deg,#0D2E1C 0%,#0D1820 40%)}
+body.dark .evt-pendiente{background:linear-gradient(135deg,#2A1F00 0%,#0D1820 40%)}
+body.dark .evt-cerrado{background:linear-gradient(135deg,#2A0D0D 0%,#0D1820 40%)}
 body.dark .tw-header{background:#0D1820;border-color:#1E2E3A}
 body.dark thead tr{background:#091420}
 body.dark th{color:#6E8090}
@@ -286,7 +286,9 @@ td{padding:12px 16px;border-top:1px solid #F0F2F5;font-size:12px;vertical-align:
 .empty-ico{font-size:36px;margin-bottom:12px}.empty-txt{font-size:14px;font-weight:500}
 /* EVENTOS REPORTE */
 .evt{background:#fff;border:1px solid var(--gray-border);border-radius:12px;margin-bottom:12px;overflow:hidden}
-.evt-abierto{border-left:4px solid var(--verde)}.evt-pendiente{border-left:4px solid var(--amber)}.evt-cerrado{border-left:4px solid var(--rojo)}
+.evt-abierto{border-left:4px solid var(--verde);background:linear-gradient(135deg,#F0FFF6 0%,#fff 40%)}
+.evt-pendiente{border-left:4px solid var(--amber);background:linear-gradient(135deg,#FFFBF0 0%,#fff 40%)}
+.evt-cerrado{border-left:4px solid var(--rojo);background:linear-gradient(135deg,#FFF5F5 0%,#fff 40%)}
 .evt-head{padding:14px 18px}
 .evt-head-top{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:8px}
 .evt-titulo{font-size:14px;font-weight:700;color:var(--gray-dark)}.evt-meta{font-size:11px;color:var(--gray);margin-top:2px}
@@ -722,7 +724,7 @@ function renderRT(){
     '<div class="filtro-item"><label>Estado</label><select onchange="rp.estado=this.value"><option value="">Todos</option>'+['Abierto','Pendiente','Cerrado'].map(v=>'<option '+(rp.estado===v?'selected':'')+'>'+v+'</option>').join('')+'</select></div>'+
     '<div class="filtro-item"><label>Técnico</label><select onchange="rp.tec=this.value"><option value="">Todos</option>'+tecs.map(t=>'<option '+(rp.tec===t?'selected':'')+'>'+t+'</option>').join('')+'</select></div>'+
     '<button class="btn-generar" onclick="genRT()">🔍 Generar reporte</button>'+
-    '<button class="btn-generar" id="btnPDF" onclick="exportarPDF()" style="display:none;background:#7A1010">📄 Exportar PDF</button>'+
+    '<button class="btn-generar" id="btnPDF" onclick="exportarPDF()" style="display:none;background:#22a954">📄 Exportar PDF</button>'+
     '</div>'+
     '<div id="rpRes">'+(rp.generado?rpRes():'<div class="empty-state"><div class="empty-ico">📋</div><div class="empty-txt">Seleccioná los filtros y generá el reporte</div></div>')+'</div>'+
     '</div>';
