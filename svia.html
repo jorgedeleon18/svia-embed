@@ -6,6 +6,8 @@
 <title>SVIA Eventualidades</title>
 <link href="https://fonts.googleapis.com/css2?family=Encode+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@azure/msal-browser@3.28.0/lib/msal-browser.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <style>
 :root{
   --aub:#00AEC3;--aub-dark:#00759A;--aub-darker:#024560;
@@ -17,6 +19,59 @@
   --rojo:#be1717;--rojo-light:#FADEDE;--rojo-dark:#7A1010;
   --sb-bg:#022D40;--fn:'Encode Sans',system-ui,sans-serif;
 }
+/* DARK MODE */
+body.dark{
+  --gray-bg:#071828;--gray-border:#1A3040;--gray-dark:#E0E8EE;
+  --gray:#6A8090;--gray-light:#0D2030;--gray-dark2:#E0E8EE;
+  --aub-light:#002A38;--aub-pale:#001820;
+  --verde-light:#071E14;--verde-dark:#4CD9A0;
+  --amber-light:#241C00;--amber-dark:#FFD54F;
+  --rojo-light:#2A0A0A;--rojo-dark:#FF8A80;
+}
+body.dark .main{background:#071828}
+body.dark .topbar{background:#0D1E28;border-color:#1A3040}
+body.dark .topbar-title{color:#E0E8EE}
+body.dark .sc,body.dark .tw,body.dark .form-card,body.dark .fc-card,body.dark .det-card,body.dark .det-header,body.dark .evt,body.dark .filtros,body.dark .kpi-header,body.dark .kpi-card,body.dark .ge-header,body.dark .modal-box{background:#0D1E28;border-color:#1A3040}
+body.dark .tw-header{background:#0D1E28;border-color:#1A3040}
+body.dark thead tr{background:#0A1A26}
+body.dark th{color:#6A8090}
+body.dark td{color:#C0CDD5;border-color:#1A3040}
+body.dark .trow:hover td{background:#0A2030 !important}
+body.dark .trow-abierto td{background:linear-gradient(90deg,#071E14 0%,#0D1E28 60%) !important}
+body.dark .trow-pendiente td{background:linear-gradient(90deg,#241C00 0%,#0D1E28 60%) !important}
+body.dark .trow-cerrado td{background:linear-gradient(90deg,#2A0A0A 0%,#0D1E28 60%) !important}
+body.dark .td-main{color:#E0E8EE}
+body.dark .sc-label{color:#6A8090}
+body.dark .sc-val{color:#E0E8EE}
+body.dark .tw-title{color:#E0E8EE}
+body.dark .fc,.dark .ge-fc{background:#0D1E28;border-color:#1A3040;color:#6A8090}
+body.dark .fc:hover,.dark .ge-fc:hover{border-color:var(--aub);color:var(--aub)}
+body.dark .field input,.dark .field select,.dark .field textarea,.dark .filtro-item input,.dark .filtro-item select{background:#071828;border-color:#1A3040;color:#E0E8EE}
+body.dark .det-card-val,.dark .det-card-label,.dark .det-texto,.dark .lugar-nombre{color:#E0E8EE}
+body.dark .kpi-card-body,.dark .kpi-bar-label,.dark .kpi-tiempo-row-titulo,.dark .ge-header-title,.dark .kpi-header-title{color:#E0E8EE}
+body.dark .kpi-card-title{opacity:1}
+body.dark .fs-title{opacity:1}
+body.dark .sec-lbl{color:#7DCFDA}
+body.dark .sec-text{background:rgba(255,255,255,0.03)}
+body.dark .chip{background:#071828;border-color:#1A3040;color:#6A8090}
+body.dark .chip-dark{background:#071828;border-color:#1A3040;color:#6A8090}
+body.dark .tec-main{background:#002A38;border-color:#00AEC3}
+body.dark .tec-name{color:#7DCFDA}
+body.dark .add-tec{background:#071828;border-color:#1A3040;color:#6A8090}
+body.dark .add-tec:hover{background:#002A38;border-color:var(--aub);color:var(--aub)}
+body.dark .extra-tec select{background:#071828;border-color:#1A3040;color:#E0E8EE}
+body.dark .kpi-bar-track{background:#1A3040}
+body.dark .btn-cancel{background:#0D1E28;border-color:#1A3040;color:#E0E8EE}
+body.dark .modal-box{background:#0D1E28}
+body.dark .modal-title{background:#013A50}
+body.dark .gps-note{background:#071828;border-color:#1A3040;color:#6A8090}
+body.dark .sc-aub.active{background:#002A38}
+body.dark .sc-v.active{background:#071E14}
+body.dark .sc-a.active{background:#241C00}
+body.dark .sc-r.active{background:#2A0A0A}
+/* Dark toggle button */
+.dark-toggle{background:transparent;border:1px solid rgba(255,255,255,0.15);color:rgba(255,255,255,0.5);padding:5px 9px;border-radius:6px;cursor:pointer;font-size:14px;transition:all 0.15s;line-height:1}
+.dark-toggle:hover{background:rgba(255,255,255,0.08);color:rgba(255,255,255,0.8)}
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html,body{height:100%;font-family:var(--fn);background:var(--gray-bg);color:var(--gray-dark);font-size:14px}
 /* LOGIN */
@@ -332,6 +387,7 @@ td{padding:12px 16px;border-top:1px solid #F0F2F5;font-size:12px;vertical-align:
           <div class="topbar-sub" id="topSub">Solo vos podés ver tus registros</div>
         </div>
         <div id="topbarActions"></div>
+        <button class="dark-toggle" id="darkToggle" onclick="toggleDark()" title="Modo oscuro">🌙</button>
       </div>
       <div class="content" id="mainContent"><div class="loading-txt">Cargando...</div></div>
     </div>
@@ -349,6 +405,10 @@ td{padding:12px 16px;border-top:1px solid #F0F2F5;font-size:12px;vertical-align:
 </div>
 <div class="toast" id="toast"></div>
 <script>
+let darkMode=localStorage.getItem('svia-dark')==='1';
+function toggleDark(){darkMode=!darkMode;localStorage.setItem('svia-dark',darkMode?'1':'0');applyDark();}
+function applyDark(){document.body.classList.toggle('dark',darkMode);document.getElementById('darkToggle').textContent=darkMode?'☀️':'🌙';}
+
 const CLIENT_ID='ec6b52bb-eb56-43d5-879b-a195a5a4ada4';
 const TENANT_ID='9444ead0-9771-4ed8-a608-802faff70d4f';
 const REDIRECT='https://jorgedeleon18.github.io/svia-embed/';
@@ -437,6 +497,7 @@ async function handleLogin(){
 function logout(){usuario=null;eventos=[];empleadosList=[];document.getElementById('appScreen').style.display='none';document.getElementById('loginScreen').style.display='flex';document.getElementById('inputUser').value='';document.getElementById('inputPass').value='';hideErr();}
 
 async function cargarApp(){
+  applyDark();
   document.getElementById('loginScreen').style.display='none';
   document.getElementById('appScreen').style.display='block';
   document.getElementById('avatarInits').textContent=usuario.initials;
@@ -608,6 +669,7 @@ function renderRT(){
     '<div class="filtro-item"><label>Estado</label><select onchange="rp.estado=this.value"><option value="">Todos</option>'+['Abierto','Pendiente','Cerrado'].map(v=>'<option '+(rp.estado===v?'selected':'')+'>'+v+'</option>').join('')+'</select></div>'+
     '<div class="filtro-item"><label>Técnico</label><select onchange="rp.tec=this.value"><option value="">Todos</option>'+tecs.map(t=>'<option '+(rp.tec===t?'selected':'')+'>'+t+'</option>').join('')+'</select></div>'+
     '<button class="btn-generar" onclick="genRT()">🔍 Generar reporte</button>'+
+    '<button class="btn-generar" id="btnPDF" onclick="exportarPDF()" style="display:none;background:#7A1010">📄 Exportar PDF</button>'+
     '</div>'+
     '<div id="rpRes">'+(rp.generado?rpRes():'<div class="empty-state"><div class="empty-ico">📋</div><div class="empty-txt">Seleccioná los filtros y generá el reporte</div></div>')+'</div>'+
     '</div>';
@@ -616,6 +678,7 @@ function genRT(){
   let f=[...eventos];
   if(rp.turno)f=f.filter(e=>e.turno===rp.turno);if(rp.estado)f=f.filter(e=>e.estado===rp.estado);if(rp.tec)f=f.filter(e=>e.tecs.some(t=>t===rp.tec));if(rp.desde)f=f.filter(e=>e.ft>=rp.desde);if(rp.hasta)f=f.filter(e=>e.ft<=rp.hasta);
   rp.resultado=f;rp.generado=true;document.getElementById('rpRes').innerHTML=rpRes();
+  const btn=document.getElementById('btnPDF');if(btn)btn.style.display=f.length>0?'':'none';
 }
 function rpRes(){
   if(rp.resultado.length===0)return'<div class="empty-state"><div class="empty-ico">🔍</div><div class="empty-txt">Sin resultados</div></div>';
@@ -625,6 +688,58 @@ function rpRes(){
   return st+cards;
 }
 function togS(el){const a=el.querySelector('.sec-arrow'),b=el.nextElementSibling;if(b&&b.classList.contains('sec-body')){const o=b.style.display!=='none'&&b.style.display!=='';b.style.display=o?'none':'';a.className='sec-arrow'+(o?'':' open');}}
+async function exportarPDF(){
+  const el=document.getElementById('rpRes');
+  if(!el||!rp.resultado.length){toast('Generá el reporte primero','err');return;}
+  const btn=document.getElementById('btnPDF');
+  btn.disabled=true;btn.textContent='Generando...';
+  try{
+    const canvas=await html2canvas(el,{scale:1.5,useCORS:true,backgroundColor:darkMode?'#071828':'#ffffff'});
+    const imgData=canvas.toDataURL('image/jpeg',0.85);
+    const {jsPDF}=window.jspdf;
+    const pdf=new jsPDF({orientation:'portrait',unit:'mm',format:'a4'});
+    const pageW=210,pageH=297,margin=10;
+    const imgW=pageW-margin*2;
+    const imgH=(canvas.height*imgW)/canvas.width;
+    // Header
+    pdf.setFillColor(2,45,64);pdf.rect(0,0,210,22,'F');
+    pdf.setTextColor(255,255,255);pdf.setFontSize(13);pdf.setFont('helvetica','bold');
+    pdf.text('SVIA — Reporte de Turno',margin,10);
+    pdf.setFontSize(8);pdf.setFont('helvetica','normal');
+    const hoy=new Date().toLocaleDateString('es-AR',{day:'2-digit',month:'2-digit',year:'numeric'});
+    pdf.text('Generado: '+hoy+' · '+rp.resultado.length+' eventualidades',margin,16);
+    // Filters summary
+    let filtros=[];
+    if(rp.turno)filtros.push('Turno: '+rp.turno);
+    if(rp.desde)filtros.push('Desde: '+rp.desde);if(rp.hasta)filtros.push('Hasta: '+rp.hasta);
+    if(rp.estado)filtros.push('Estado: '+rp.estado);if(rp.tec)filtros.push('Técnico: '+rp.tec);
+    if(filtros.length){pdf.setTextColor(0,174,195);pdf.setFontSize(7);pdf.text(filtros.join('  |  '),margin,20);}
+    // Content image
+    const startY=25;
+    const availH=pageH-startY-margin;
+    if(imgH<=availH){
+      pdf.addImage(imgData,'JPEG',margin,startY,imgW,imgH);
+    } else {
+      // Multi-page
+      let remaining=imgH,srcY=0;
+      while(remaining>0){
+        const sliceH=Math.min(availH,remaining);
+        const sliceCanvas=document.createElement('canvas');
+        sliceCanvas.width=canvas.width;
+        sliceCanvas.height=Math.round((sliceH/imgH)*canvas.height);
+        const ctx=sliceCanvas.getContext('2d');
+        ctx.drawImage(canvas,0,Math.round((srcY/imgH)*canvas.height),canvas.width,sliceCanvas.height,0,0,canvas.width,sliceCanvas.height);
+        pdf.addImage(sliceCanvas.toDataURL('image/jpeg',0.85),'JPEG',margin,startY,imgW,sliceH);
+        remaining-=sliceH;srcY+=sliceH;
+        if(remaining>0)pdf.addPage();
+      }
+    }
+    pdf.save('SVIA-Reporte-'+hoy.replace(/\//g,'-')+'.pdf');
+    toast('✓ PDF generado');
+  }catch(e){console.error(e);toast('Error al generar PDF','err');}
+  finally{btn.disabled=false;btn.textContent='📄 Exportar PDF';}
+}
+
 
 // ─── KPI DASHBOARD ───────────────────────────────────────
 function getKpiFiltradas(){
