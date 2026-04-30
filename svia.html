@@ -19,59 +19,109 @@
   --rojo:#be1717;--rojo-light:#FADEDE;--rojo-dark:#7A1010;
   --sb-bg:#022D40;--fn:'Encode Sans',system-ui,sans-serif;
 }
-/* DARK MODE */
+/* DARK MODE — mismos tonos que app Netlify */
 body.dark{
-  --gray-bg:#071828;--gray-border:#1A3040;--gray-dark:#E0E8EE;
-  --gray:#6A8090;--gray-light:#0D2030;--gray-dark2:#E0E8EE;
-  --aub-light:#002A38;--aub-pale:#001820;
-  --verde-light:#071E14;--verde-dark:#4CD9A0;
-  --amber-light:#241C00;--amber-dark:#FFD54F;
-  --rojo-light:#2A0A0A;--rojo-dark:#FF8A80;
+  --aub:#00C8E0;--aub-dark:#00AEC3;--aub-darker:#7ee8f5;
+  --aub-light:#003D4D;--aub-pale:#002A38;
+  --gray:#6E8090;--gray-light:#1E2A32;--gray-bg:#111C24;
+  --gray-border:#1E2E3A;--gray-dark:#B8C8D4;
+  --verde:#2ecc71;--verde-light:#0D2E1C;--verde-dark:#7DFBB0;
+  --amber:#F0A500;--amber-light:#2A1F00;--amber-dark:#FFD966;
+  --rojo:#e05555;--rojo-light:#2A0D0D;--rojo-dark:#FFB0B0;
+  --sb-bg:#071820;
+  background:#111C24;
 }
-body.dark .main{background:#071828}
-body.dark .topbar{background:#0D1E28;border-color:#1A3040}
-body.dark .topbar-title{color:#E0E8EE}
-body.dark .sc,body.dark .tw,body.dark .form-card,body.dark .fc-card,body.dark .det-card,body.dark .det-header,body.dark .evt,body.dark .filtros,body.dark .kpi-header,body.dark .kpi-card,body.dark .ge-header,body.dark .modal-box{background:#0D1E28;border-color:#1A3040}
-body.dark .tw-header{background:#0D1E28;border-color:#1A3040}
-body.dark thead tr{background:#0A1A26}
-body.dark th{color:#6A8090}
-body.dark td{color:#C0CDD5;border-color:#1A3040}
-body.dark .trow:hover td{background:#0A2030 !important}
-body.dark .trow-abierto td{background:linear-gradient(90deg,#071E14 0%,#0D1E28 60%) !important}
-body.dark .trow-pendiente td{background:linear-gradient(90deg,#241C00 0%,#0D1E28 60%) !important}
-body.dark .trow-cerrado td{background:linear-gradient(90deg,#2A0A0A 0%,#0D1E28 60%) !important}
-body.dark .td-main{color:#E0E8EE}
-body.dark .sc-label{color:#6A8090}
-body.dark .sc-val{color:#E0E8EE}
-body.dark .tw-title{color:#E0E8EE}
-body.dark .fc,.dark .ge-fc{background:#0D1E28;border-color:#1A3040;color:#6A8090}
-body.dark .fc:hover,.dark .ge-fc:hover{border-color:var(--aub);color:var(--aub)}
-body.dark .field input,.dark .field select,.dark .field textarea,.dark .filtro-item input,.dark .filtro-item select{background:#071828;border-color:#1A3040;color:#E0E8EE}
-body.dark .det-card-val,.dark .det-card-label,.dark .det-texto,.dark .lugar-nombre{color:#E0E8EE}
-body.dark .kpi-card-body,.dark .kpi-bar-label,.dark .kpi-tiempo-row-titulo,.dark .ge-header-title,.dark .kpi-header-title{color:#E0E8EE}
+body.dark .main{background:#111C24}
+body.dark .topbar{background:#0D1820;border-color:#1E2E3A}
+body.dark .topbar-title{color:#B8C8D4}
+body.dark .topbar-sub{color:#6E8090}
+body.dark .sc,body.dark .tw,body.dark .form-card,body.dark .fc-card,
+body.dark .det-card,body.dark .det-header,body.dark .evt,
+body.dark .filtros,body.dark .kpi-header,body.dark .kpi-card,
+body.dark .ge-header,body.dark .modal-box{background:#0D1820;border-color:#1E2E3A}
+body.dark .tw-header{background:#0D1820;border-color:#1E2E3A}
+body.dark thead tr{background:#091420}
+body.dark th{color:#6E8090}
+body.dark td{color:#B8C8D4;border-color:#1E2E3A}
+body.dark .trow:hover td{background:#091C28 !important}
+body.dark .trow-abierto td{background:linear-gradient(90deg,#0D2E1C 0%,#0D1820 60%) !important}
+body.dark .trow-pendiente td{background:linear-gradient(90deg,#2A1F00 0%,#0D1820 60%) !important}
+body.dark .trow-cerrado td{background:linear-gradient(90deg,#2A0D0D 0%,#0D1820 60%) !important}
+body.dark .td-main{color:#B8C8D4}
+body.dark .sc-label{color:#6E8090}
+body.dark .sc-val{color:#B8C8D4}
+body.dark .tw-title{color:#B8C8D4}
+body.dark .fc{background:#0D1820;border-color:#1E2E3A;color:#6E8090}
+body.dark .ge-fc{background:#0D1820;border-color:#1E2E3A;color:#6E8090}
+body.dark .fc:hover,.body.dark .ge-fc:hover{border-color:var(--aub);color:var(--aub)}
+body.dark .field input,body.dark .field select,body.dark .field textarea,
+body.dark .filtro-item input,body.dark .filtro-item select{background:#091420;border-color:#1E2E3A;color:#B8C8D4}
+body.dark .det-card-val,body.dark .det-card-label,body.dark .det-texto,body.dark .lugar-nombre{color:#B8C8D4}
+body.dark .lugar-sub{color:#6E8090}
+body.dark .kpi-bar-label,body.dark .kpi-tiempo-row-titulo,body.dark .ge-header-title,body.dark .kpi-header-title{color:#B8C8D4}
+body.dark .kpi-header-sub,body.dark .ge-header-sub{color:#6E8090}
 body.dark .kpi-card-title{opacity:1}
-body.dark .fs-title{opacity:1}
-body.dark .sec-lbl{color:#7DCFDA}
-body.dark .sec-text{background:rgba(255,255,255,0.03)}
-body.dark .chip{background:#071828;border-color:#1A3040;color:#6A8090}
-body.dark .chip-dark{background:#071828;border-color:#1A3040;color:#6A8090}
-body.dark .tec-main{background:#002A38;border-color:#00AEC3}
-body.dark .tec-name{color:#7DCFDA}
-body.dark .add-tec{background:#071828;border-color:#1A3040;color:#6A8090}
-body.dark .add-tec:hover{background:#002A38;border-color:var(--aub);color:var(--aub)}
-body.dark .extra-tec select{background:#071828;border-color:#1A3040;color:#E0E8EE}
-body.dark .kpi-bar-track{background:#1A3040}
-body.dark .btn-cancel{background:#0D1E28;border-color:#1A3040;color:#E0E8EE}
-body.dark .modal-box{background:#0D1E28}
-body.dark .modal-title{background:#013A50}
-body.dark .gps-note{background:#071828;border-color:#1A3040;color:#6A8090}
-body.dark .sc-aub.active{background:#002A38}
-body.dark .sc-v.active{background:#071E14}
-body.dark .sc-a.active{background:#241C00}
-body.dark .sc-r.active{background:#2A0A0A}
-/* Dark toggle button */
-.dark-toggle{background:transparent;border:1px solid rgba(255,255,255,0.15);color:rgba(255,255,255,0.5);padding:5px 9px;border-radius:6px;cursor:pointer;font-size:14px;transition:all 0.15s;line-height:1}
-.dark-toggle:hover{background:rgba(255,255,255,0.08);color:rgba(255,255,255,0.8)}
+body.dark .fs-title{background:#013040;opacity:1}
+body.dark .sec-lbl{color:#00C8E0}
+body.dark .sec-text{background:rgba(255,255,255,0.03);color:#B8C8D4}
+body.dark .sec-text-sol{border-left-color:var(--verde)}
+body.dark .chip{background:#0D1820;border-color:#1E2E3A;color:#6E8090}
+body.dark .chip-dark{background:#0D1820;border-color:#1E2E3A;color:#6E8090}
+body.dark .tec-main{background:#003D4D;border-color:#00AEC3}
+body.dark .tec-name{color:#00C8E0}
+body.dark .tec-sub{color:#6E8090}
+body.dark .add-tec{background:#0D1820;border-color:#1E2E3A;color:#6E8090}
+body.dark .add-tec:hover{background:#003D4D;border-color:var(--aub);color:var(--aub)}
+body.dark .extra-tec select{background:#0D1820;border-color:#1E2E3A;color:#B8C8D4}
+body.dark .kpi-bar-track{background:#1E2E3A}
+body.dark .btn-cancel{background:#0D1820;border-color:#1E2E3A;color:#B8C8D4}
+body.dark .modal-box{background:#0D1820}
+body.dark .modal-title{background:#013040}
+body.dark .gps-note{background:#091420;border-color:#1E2E3A;color:#6E8090}
+body.dark .sc-aub.active{background:#003D4D}
+body.dark .sc-v.active{background:#0D2E1C}
+body.dark .sc-a.active{background:#2A1F00}
+body.dark .sc-r.active{background:#2A0D0D}
+body.dark .form-card-title{background:#013040}
+body.dark .lugar-peaje{background:#003D4D;border-color:#00AEC3}
+body.dark .lugar-via{background:#1E2A32;border-color:#2E4A60}
+body.dark .lugar-tipo-label{color:#00C8E0}
+body.dark .legajo-badge{color:#6E8090}
+body.dark .puesto-badge{background:#1E2A32;color:#B8C8D4}
+body.dark .edit-btn{background:transparent;border-color:#1E2E3A}
+body.dark .edit-btn:hover{background:#003D4D}
+body.dark .kpi-qs{background:#0D1820;border-color:#1E2E3A}
+body.dark .kpi-qs-label{color:#6E8090}
+body.dark .kpi-qs-val{color:#B8C8D4}
+body.dark .kpi-card{background:#0D1820;border-color:#1E2E3A}
+body.dark .kpi-card-body{color:#B8C8D4}
+body.dark .kpi-tiempo-stat-val{color:#B8C8D4}
+body.dark .kpi-tiempo-stat-label{color:#6E8090}
+body.dark .kpi-bar-val{color:#B8C8D4}
+body.dark .evt-titulo{color:#B8C8D4}
+body.dark .evt-meta{color:#6E8090}
+body.dark .fecha-val{color:#B8C8D4}
+body.dark .sec-toggle:hover{background:rgba(0,200,224,0.05)}
+/* Dark mode toggle — igual al de la app React */
+.dark-toggle{
+  display:flex;align-items:center;gap:7px;cursor:pointer;
+  padding:6px 10px;border-radius:8px;border:1px solid var(--gray-border);
+  background:transparent;font-family:var(--fn);font-size:12px;
+  color:var(--gray);transition:all 0.18s
+}
+.dark-toggle:hover{border-color:var(--aub);color:var(--aub)}
+.dark-toggle-track{
+  width:30px;height:16px;border-radius:8px;background:var(--gray-border);
+  position:relative;transition:background 0.2s;flex-shrink:0
+}
+.dark-toggle-thumb{
+  width:12px;height:12px;border-radius:50%;background:#fff;
+  position:absolute;top:2px;left:2px;transition:transform 0.2s;
+  box-shadow:0 1px 3px rgba(0,0,0,0.2)
+}
+body.dark .dark-toggle-track{background:var(--aub)}
+body.dark .dark-toggle-thumb{transform:translateX(14px)}
+body.dark .dark-toggle{border-color:#1E2E3A;color:#9AA5B0}
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html,body{height:100%;font-family:var(--fn);background:var(--gray-bg);color:var(--gray-dark);font-size:14px}
 /* LOGIN */
@@ -387,7 +437,10 @@ td{padding:12px 16px;border-top:1px solid #F0F2F5;font-size:12px;vertical-align:
           <div class="topbar-sub" id="topSub">Solo vos podés ver tus registros</div>
         </div>
         <div id="topbarActions"></div>
-        <button class="dark-toggle" id="darkToggle" onclick="toggleDark()" title="Modo oscuro">🌙</button>
+        <button class="dark-toggle" id="darkToggle" onclick="toggleDark()" title="Modo oscuro">
+          🌙
+          <div class="dark-toggle-track"><div class="dark-toggle-thumb"></div></div>
+        </button>
       </div>
       <div class="content" id="mainContent"><div class="loading-txt">Cargando...</div></div>
     </div>
