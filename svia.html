@@ -5,7 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>SVIA Eventualidades</title>
 <link href="https://fonts.googleapis.com/css2?family=Encode+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/@azure/msal-browser@3.28.0/lib/msal-browser.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@azure/msal-browser@3.28.0/lib/msal-browser.min.js">function irNueva(){mostrarVista("nueva");}
+</script>
 <style>
 :root{
   --aub:#00AEC3;--aub-dark:#00759A;--aub-darker:#024560;
@@ -361,7 +362,7 @@ function mostrarVista(v){
   document.querySelectorAll('.sb-item').forEach(el=>el.classList.remove('active'));
   const ni=document.getElementById('nav-'+v);if(ni)ni.classList.add('active');
   document.getElementById('topbarActions').innerHTML='';
-  if(v==='mistareas'){document.getElementById('topTitle').textContent='Mis tareas';document.getElementById('topSub').textContent='Solo vos podés ver tus registros';document.getElementById('topbarActions').innerHTML='<button class="topbar-btn" onclick="mostrarVista('nueva')">+ Nueva eventualidad</button>';renderMT();}
+  if(v==='mistareas'){document.getElementById('topTitle').textContent='Mis tareas';document.getElementById('topSub').textContent='Solo vos podés ver tus registros';document.getElementById('topbarActions').innerHTML='<button class="topbar-btn" onclick="irNueva()">+ Nueva eventualidad</button>'renderMT();}
   else if(v==='reporte'){document.getElementById('topTitle').textContent='Reporte de turno';document.getElementById('topSub').textContent='Acceso compartido';renderRT();}
   else if(v==='nueva'){document.getElementById('topTitle').textContent='Nueva eventualidad';document.getElementById('topSub').textContent='Completá los datos del evento';ne={titulo:'',ft:hoy(),ht:horaAct(),fc:'',hc:'',turno:'',estado:'Abierto',peaje:'',rama:'',viaNro:'',problema:'',solucion:'',extraTecs:[]};renderNE();}
   else if(v==='detalle'){document.getElementById('topTitle').textContent='Detalle';document.getElementById('topSub').textContent=detalleId||'';renderDet();}
