@@ -541,10 +541,21 @@ async function leerEmpleados(){
 }
 
 async function handleMicrosoft(){
-  if(!msalInst){showErr('MSAL no disponible.');return;}
-  hideErr();document.getElementById('btnMicrosoft').disabled=true;document.getElementById('btnMSText').textContent='Iniciando sesión...';
-  try{await msalInst.initialize();const r=await msalInst.loginPopup({scopes:SCOPES});await verificarYEntrar(r.account.username);}
-  catch(e){console.warn(e);showErr('Error al iniciar sesión. Intentá de nuevo.');document.getElementById('btnMicrosoft').disabled=false;document.getElementById('btnMSText').textContent='Ingresar con cuenta Microsoft';}
+  if(!msalInst){showErr("MSAL no disponible.");return;}
+  hideErr();
+  document.getElementById("btnMicrosoft").disabled=true;
+  document.getElementById("btnMSText").textContent="Iniciando sesión...";
+  try{
+    await msalInst.initialize();
+    const r=await msalInst.loginPopup({scopes:SCOPES,prompt:"select_account"});
+    await verificarYEntrar(r.account.username);
+  }catch(e){
+    console.warn(e);
+    try{msalInst.clearCache();}catch(_){}
+    showErr("Error al iniciar sesión. Intentá de nuevo.");
+    document.getElementById("btnMicrosoft").disabled=false;
+    document.getElementById("btnMSText").textContent="Ingresar con cuenta Microsoft";
+  }
 }
 
 async function verificarYEntrar(email){
