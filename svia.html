@@ -61,7 +61,7 @@ body.dark .det-card-val,body.dark .det-card-label,body.dark .det-texto,body.dark
 body.dark .lugar-sub{color:#6E8090}
 body.dark .kpi-bar-label,body.dark .kpi-tiempo-row-titulo,body.dark .ge-header-title,body.dark .kpi-header-title{color:#B8C8D4}
 body.dark .kpi-header-sub,body.dark .ge-header-sub{color:#6E8090}
-body.dark .kpi-card-title{opacity:1}
+body.dark .kpi-card-title{opacity:1;background:#013040;color:#fff}
 body.dark .fs-title{background:#013040;opacity:1}
 body.dark .sec-lbl{color:#00C8E0}
 body.dark .sec-text{background:rgba(255,255,255,0.03);color:#B8C8D4}
@@ -166,7 +166,7 @@ body.dark .sec-text{background:rgba(255,255,255,0.03);color:#B8C8D4}
 body.dark .sec-text-sol{border-left-color:var(--verde)}
 body.dark .sec-toggle:hover{background:rgba(0,200,224,0.05)}
 body.dark .kpi-bar-track{background:#1E2E3A}
-body.dark .kpi-card-title{opacity:1}
+body.dark .kpi-card-title{opacity:1;background:#013040;color:#fff}
 body.dark .edit-btn{background:transparent;border-color:#1E2E3A}
 body.dark .edit-btn:hover{background:#003D4D}
 body.dark .sc-aub.active{background:#003D4D}
@@ -656,7 +656,7 @@ async function handleLogin(){
   finally{document.getElementById('btnIngresar').disabled=false;document.getElementById('btnIngresar').textContent='Ingresar';}
 }
 
-function logout(){usuario=null;eventos=[];empleadosList=[];document.getElementById('appScreen').style.display='none';document.getElementById('loginScreen').style.display='flex';document.getElementById('inputUser').value='';document.getElementById('inputPass').value='';hideErr();}
+function logout(){usuario=null;eventos=[];empleadosList=[];document.getElementById('appScreen').style.display='none';document.getElementById('loginScreen').style.display='flex';document.getElementById('inputUser').value='';document.getElementById('inputPass').value='';document.getElementById('btnIngresar').disabled=false;document.getElementById('btnIngresar').textContent='Ingresar';document.getElementById('btnMicrosoft').disabled=false;document.getElementById('btnMSText').textContent='Ingresar con cuenta Microsoft';hideErr();}
 
 async function cargarApp(){
   applyDark();
