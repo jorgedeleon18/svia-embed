@@ -7,9 +7,6 @@
 </head>
 <body>
 <script>
-// Esta página solo existe para manejar el redirect callback de MSAL.
-// MSAL usa loginPopup, entonces este archivo se carga en el popup,
-// procesa el token y cierra la ventana automáticamente.
 try {
   const msalInstance = new msal.PublicClientApplication({
     auth: {
@@ -20,9 +17,17 @@ try {
     cache: { cacheLocation: 'sessionStorage' }
   });
   msalInstance.initialize().then(() => {
-    msalInstance.handleRedirectPromise().catch(console.warn);
+    msalInstance.handleRedirectPromise().then(() => {
+      window.close();
+    }).catch(() => {
+      window.close();
+    });
+  }).catch(() => {
+    window.close();
   });
-} catch(e) { console.warn(e); }
+} catch(e) {
+  window.close();
+}
 </script>
 </body>
 </html>
