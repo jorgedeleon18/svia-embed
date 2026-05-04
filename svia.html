@@ -19,7 +19,6 @@
   --rojo:#be1717;--rojo-light:#FADEDE;--rojo-dark:#7A1010;
   --sb-bg:#022D40;--fn:'Encode Sans',system-ui,sans-serif;
 }
-/* DARK MODE — mismos tonos que app Netlify */
 body.dark{
   --aub:#00C8E0;--aub-dark:#00AEC3;--aub-darker:#7ee8f5;
   --aub-light:#003D4D;--aub-pale:#002A38;
@@ -53,7 +52,6 @@ body.dark .sc-val{color:#B8C8D4}
 body.dark .tw-title{color:#B8C8D4}
 body.dark .fc{background:#0D1820;border-color:#1E2E3A;color:#6E8090}
 body.dark .ge-fc{background:#0D1820;border-color:#1E2E3A;color:#6E8090}
-body.dark .fc:hover,.body.dark .ge-fc:hover{border-color:var(--aub);color:var(--aub)}
 body.dark .field input,body.dark .field select,body.dark .field textarea,
 body.dark .filtro-item input,body.dark .filtro-item select{background:#091420;border-color:#1E2E3A;color:#B8C8D4}
 body.dark .det-card-val,body.dark .det-card-label,body.dark .det-texto,body.dark .lugar-nombre{color:#B8C8D4}
@@ -82,6 +80,7 @@ body.dark .sc-aub.active{background:#003D4D}
 body.dark .sc-v.active{background:#0D2E1C}
 body.dark .sc-a.active{background:#2A1F00}
 body.dark .sc-r.active{background:#2A0D0D}
+body.dark .form-card{background:#0D1820;border-color:#1E2E3A}
 body.dark .form-card-title{background:#013040}
 body.dark .lugar-peaje{background:#003D4D;border-color:#00AEC3}
 body.dark .lugar-via{background:#1E2A32;border-color:#2E4A60}
@@ -102,7 +101,15 @@ body.dark .evt-titulo{color:#B8C8D4}
 body.dark .evt-meta{color:#6E8090}
 body.dark .fecha-val{color:#B8C8D4}
 body.dark .sec-toggle:hover{background:rgba(0,200,224,0.05)}
-/* Dark mode toggle — igual al de la app React */
+body.dark .det-card{background:#0D1820;border-color:#1E2E3A}
+body.dark .fc-card{background:#0D1820;border-color:#1E2E3A}
+body.dark .det-header{background:#0D1820;border-color:#1E2E3A}
+body.dark .filtros{background:#0D1820;border-color:#1E2E3A}
+body.dark .tw{background:#0D1820;border-color:#1E2E3A}
+body.dark .sc{background:#0D1820;border-color:#1E2E3A}
+body.dark .ge-header{background:#0D1820;border-color:#1E2E3A}
+body.dark .kpi-header{background:#0D1820;border-color:#1E2E3A}
+/* Dark mode toggle */
 .dark-toggle{
   display:flex;align-items:center;gap:7px;cursor:pointer;
   padding:6px 10px;border-radius:8px;border:1px solid var(--gray-border);
@@ -476,14 +483,32 @@ const FLOW_ACTUALIZAR=FL+'25583d61748842cf8befe7f79b13b4ef/'+SIG1+'izYtERr5_AQeL
 const FLOW_EMPLEADOS=FL+'93d95412c47e4b169c1799d22be6aab5/'+SIG1+'4T6L8G6eveqM1jGSFCu5SYJTVcIKVeGn_Q6qN3qsptM';
 const FLOW_GUARDAR_EMPLEADO=FL+'7e7b896d831c44ccb3f1b8245b02ac2a/'+SIG1+'BXmGVyj9Baq9FU9Zdpeh4YFcqX1eYpZa1VUtp_-Ktto';
 const FLOW_ACTUALIZAR_EMPLEADO=FL+'214498f3bfe248d78bb51b8e6562f4fc/'+SIG1+'HNqmUKxWhAuSFe2YvZ71Y3lWylrmif29W5wWBlFYQyk';
-const PEAJES=['Maipu','La Huella','Samborombon','Mar Chiquita','Dock Sud','Hudson','Ezeiza','Avellaneda'];
-const VIAS_ASC=Array.from({length:15},(_,i)=>i+1);
-const VIAS_DESC=Array.from({length:15},(_,i)=>i+51);
+
+// ─── CONSTANTES (igual que React) ─────────────────────────
+const PEAJES=['Maipu','La Huella','Samborombon','Madariaga','Mar Chiquita'];
+const VIAS_POR_PEAJE={
+  'Maipu':       {asc:{desde:2,hasta:15},desc:{desde:51,hasta:60}},
+  'La Huella':   {asc:{desde:2,hasta:15},desc:{desde:51,hasta:60}},
+  'Samborombon': {asc:{desde:2,hasta:15},desc:{desde:51,hasta:60}},
+  'Madariaga':   {asc:{desde:1,hasta:4},desc:{desde:51,hasta:54}},
+  'Mar Chiquita':{asc:{desde:1,hasta:4},desc:{desde:51,hasta:54}},
+};
+const TIPOS_EVENTO=[
+  'Errores de sistemas - Comunicación y redes',
+  'Errores de sistemas - Vías',
+  'Errores de sistemas - Video',
+  'Fallas Eléctricas - Edilicia',
+  'Fallas Eléctricas - Vía de peaje',
+  'Fallas Eléctricas - Estación de peaje',
+  'Fallas en Electrónica de vía',
+  'Fallas en componentes de vías',
+];
 const ROLES_JEFATURA=['Jefatura','Coordinador','Supervisor','Técnico'];
 const ROLES_COORDINADOR=['Supervisor','Técnico'];
 
 let usuario=null,eventos=[],empleadosList=[],filtro='todos',detalleId=null;
-let ne={titulo:'',ft:hoy(),ht:horaAct(),fc:'',hc:'',turno:'',estado:'Abierto',peaje:'',rama:'',viaNro:'',problema:'',solucion:'',extraTecs:[]};
+// FIX: tecPrincipal y tipoEvento agregados al objeto ne
+let ne={titulo:'',ft:hoy(),ht:horaAct(),fc:'',hc:'',turno:'',estado:'Abierto',peaje:'',rama:'',viaNro:'',problema:'',solucion:'',extraTecs:[],tecPrincipal:'',tipoEvento:''};
 let rp={turno:'',desde:'',hasta:'',estado:'',tec:'',generado:false,resultado:[]};
 let kpiPeriodo='todo';
 let geFiltro='todos';
@@ -558,7 +583,6 @@ async function cargarApp(){
   document.getElementById('avatarInits').textContent=usuario.initials;
   document.getElementById('userNombre').textContent=usuario.nombre;
   document.getElementById('userRol').textContent=usuario.rol.toUpperCase();
-  // Mostrar sección admin si es supervisor/jefatura
   if(esSup()){document.getElementById('sb-admin-section').style.display='block';}
   document.getElementById('mainContent').innerHTML='<div class="loading-txt">Cargando eventualidades...</div>';
   try{
@@ -567,7 +591,17 @@ async function cargarApp(){
     eventos=(d.value||[]).map(i=>{
       const t1=spStr(i.tecnico1),t2=spStr(i.tecnico2),t3=spStr(i.tecnico3),t4=spStr(i.tecnico4);
       const lugar=spStr(i.lugar_de_tarea);
-      return{id:'EVT-'+String(i.ID).padStart(3,'0'),sp_id:i.ID,titulo:i.Title||'',ft:i.fecha_de_tarea?i.fecha_de_tarea.split('T')[0]:'',ht:spStr(i.hora_de_tarea),fc:i.fecha_de_cierre?i.fecha_de_cierre.split('T')[0]:'',hc:spStr(i.hora_de_cierre),estado:spStr(i.estado)||'Abierto',turno:spStr(i.turno)||'',lugarNombre:lugar.split(' · ')[0]||lugar,lugarSub:lugar.split(' · ')[1]||'',lugarTipo:spStr(i.via)?'via':'peaje',problema:spStr(i.detalle_del_problema),solucion:spStr(i.detalle_de_solucion),tecs:[t1,t2,t3,t4].filter(Boolean),owner:t1};
+      return{
+        id:'EVT-'+String(i.ID).padStart(3,'0'),sp_id:i.ID,titulo:i.Title||'',
+        ft:i.fecha_de_tarea?i.fecha_de_tarea.split('T')[0]:'',ht:spStr(i.hora_de_tarea),
+        fc:i.fecha_de_cierre?i.fecha_de_cierre.split('T')[0]:'',hc:spStr(i.hora_de_cierre),
+        estado:spStr(i.estado)||'Abierto',turno:spStr(i.turno)||'',
+        tipoEvento:spStr(i.tipo_de_evento)||'',
+        lugarNombre:lugar.split(' · ')[0]||lugar,lugarSub:lugar.split(' · ')[1]||'',
+        lugarTipo:spStr(i.via)?'via':'peaje',
+        problema:spStr(i.detalle_del_problema),solucion:spStr(i.detalle_de_solucion),
+        tecs:[t1,t2,t3,t4].filter(Boolean),owner:t1
+      };
     });
   }catch(e){console.warn(e);eventos=[];}
   mostrarVista('mistareas');
@@ -591,7 +625,8 @@ function mostrarVista(v){
   } else if(v==='nueva'){
     document.getElementById('topTitle').textContent='Nueva eventualidad';
     document.getElementById('topSub').textContent='Completá los datos del evento';
-    ne={titulo:'',ft:hoy(),ht:horaAct(),fc:'',hc:'',turno:'',estado:'Abierto',peaje:'',rama:'',viaNro:'',problema:'',solucion:'',extraTecs:[]};
+    // FIX: reset completo incluyendo tecPrincipal y tipoEvento
+    ne={titulo:'',ft:hoy(),ht:horaAct(),fc:'',hc:'',turno:'',estado:'Abierto',peaje:'',rama:'',viaNro:'',problema:'',solucion:'',extraTecs:[],tecPrincipal:'',tipoEvento:''};
     renderNE();
   } else if(v==='detalle'){
     document.getElementById('topTitle').textContent='Detalle';
@@ -614,8 +649,8 @@ function renderMT(){
   const c={todos:mt.length,Abierto:mt.filter(e=>e.estado==='Abierto').length,Pendiente:mt.filter(e=>e.estado==='Pendiente').length,Cerrado:mt.filter(e=>e.estado==='Cerrado').length};
   const fl=filtro==='todos'?mt:mt.filter(e=>e.estado===filtro);
   const st=[{k:'todos',l:'Mis registros',s:'eventualidades',c:'sc-aub'},{k:'Abierto',l:'Abiertas',s:'requieren atención',c:'sc-v'},{k:'Pendiente',l:'Pendientes',s:'en seguimiento',c:'sc-a'},{k:'Cerrado',l:'Cerradas',s:'finalizadas',c:'sc-r'}]
-    .map(x=>'<div class="sc '+x.c+(filtro===x.k?' active':'')+'" onclick="setF(&apos;'+x.k+'&apos;)"><div class="sc-label">'+x.l+'</div><div class="sc-val">'+c[x.k]+'</div><div class="sc-sub">'+x.s+'</div></div>').join('');
-  const fi=['todos','Abierto','Pendiente','Cerrado'].map(f=>'<button class="fc'+(filtro===f?' on':'')+'" onclick="setF(&apos;'+f+'&apos;)">'+( f==='todos'?'Todos':f)+'</button>').join('');
+    .map(x=>'<div class="sc '+x.c+(filtro===x.k?' active':'')+'\" onclick=\"setF(&apos;'+x.k+'&apos;)\"><div class="sc-label">'+x.l+'</div><div class="sc-val">'+c[x.k]+'</div><div class="sc-sub">'+x.s+'</div></div>').join('');
+  const fi=['todos','Abierto','Pendiente','Cerrado'].map(f=>'<button class="fc'+(filtro===f?' on':'')+'\" onclick=\"setF(&apos;'+f+'&apos;)\">'+( f==='todos'?'Todos':f)+'</button>').join('');
   const rows=fl.length===0?'<tr><td colspan="6" class="empty">No hay eventualidades</td></tr>':
     fl.map(e=>'<tr class="'+rowC(e.estado)+'" onclick="verDet(&apos;'+e.id+'&apos;)"><td><div class="td-main">'+e.titulo+'</div><div class="td-id">'+e.id+'</div></td><td><span class="lugar-chip">'+(e.lugarTipo==='via'?'🛣':'🏛')+' '+e.lugarNombre+'</span></td><td><div>'+fmt(e.ft)+'</div><div class="hora">'+(e.ht||'—')+'</div></td><td><span class="'+bdg(e.estado)+'">'+e.estado+'</span></td><td><div class="tecs">'+e.tecs.map(t=>'<span class="tec">'+t.split(',')[0]+'</span>').join('')+'</div></td><td><button style="background:transparent;border:1px solid var(--gray-border);border-radius:6px;padding:4px 8px;cursor:pointer" onclick="event.stopPropagation();verDet(&apos;'+e.id+'&apos;)">👁</button></td></tr>').join('');
   document.getElementById('mainContent').innerHTML='<div class="stats">'+st+'</div><div class="tw"><div class="tw-header"><span class="tw-title">Mis eventualidades</span><div class="frow">'+fi+'</div></div><table><thead><tr><th>Descripción</th><th>Lugar</th><th>Fecha tarea</th><th>Estado</th><th>Técnicos</th><th></th></tr></thead><tbody>'+rows+'</tbody></table></div>';
@@ -633,10 +668,11 @@ function renderDet(){
     '<div class="det-wrap">'+
     '<div class="det-header"><div style="flex:1"><div class="det-id">'+e.id+' · Turno '+(e.turno||'—')+'</div><div class="det-title">'+e.titulo+'</div><div class="det-meta">'+e.lugarNombre+(e.lugarSub?' · '+e.lugarSub:'')+'</div></div><span class="'+bdg(e.estado)+'" style="font-size:13px;padding:6px 14px">'+e.estado+'</span></div>'+
     '<div class="det-grid2"><div class="det-card"><div class="det-card-label">Fecha y hora de tarea</div><div class="det-card-val">'+fmt(e.ft)+'</div><div class="det-card-hora">'+(e.ht||'—')+'</div></div><div class="det-card"><div class="det-card-label">Fecha y hora de cierre</div><div class="det-card-val">'+(e.fc?fmt(e.fc):'Sin cerrar')+'</div><div class="det-card-hora">'+(e.hc||'—')+'</div></div><div class="det-card det-card-full"><div class="det-card-label">Técnicos asignados</div><div class="tecs" style="margin-top:6px">'+e.tecs.map(t=>'<span class="tec">'+t+'</span>').join('')+'</div></div></div>'+
+    (e.tipoEvento?'<div class="det-card" style="margin-bottom:0"><div class="det-card-label">Tipo de evento</div><div class="det-card-val" style="font-size:13px">'+e.tipoEvento+'</div></div>':'')+
     '<div class="fc-card"><span class="fs-title">Lugar</span><div class="lugar-bloque"><div class="lugar-tipo '+(e.lugarTipo==='via'?'lugar-via':'lugar-peaje')+'"><div class="lugar-ico">'+(e.lugarTipo==='via'?'🛣':'🏛')+'</div><div class="lugar-tipo-label">'+(e.lugarTipo==='via'?'Vía':'Peaje')+'</div></div><div><div class="lugar-nombre">'+e.lugarNombre+'</div><div class="lugar-sub">'+(e.lugarSub||'')+'</div></div></div></div>'+
     '<div class="fc-card"><span class="fs-title">Descripción del problema</span><div class="det-texto">'+(e.problema||'Sin descripción registrada')+'</div></div>'+
     '<div class="fc-card"><span class="fs-title">Solución registrada</span><div class="det-texto">'+(e.solucion||'Sin solución registrada aún')+'</div></div>'+
-    (pE?'<div class="fc-card" id="editPanel"><span class="fs-title">Actualizar eventualidad</span><div class="field"><label>Nuevo estado</label><div class="chips">'+['Abierto','Pendiente','Cerrado'].map(s=>'<button class="chip '+(window._dEst===s?'chip-'+s.toLowerCase():'')+'" onclick="dChEst(&apos;'+s+'&apos;)">● '+s+'</button>').join('')+'</div></div><div id="cF" style="'+(window._dEst==='Cerrado'?'':'display:none')+'"><div class="frow2"><div class="field"><label>Fecha de cierre</label><input type="date" id="dFc" value="'+(e.fc||'')+'"></div><div class="field"><label>Hora de cierre</label><input type="time" id="dHc" value="'+(e.hc||'')+'"></div></div></div><div class="field" style="margin-top:12px"><label>Solución registrada</label><textarea rows="3" id="dSol"'+(window._dEst!=='Cerrado'?' disabled style="opacity:0.45;cursor:not-allowed"':'')+'>'+( e.solucion||'')+'</textarea></div></div>':'')+'</div>'+
+    (pE?'<div class="fc-card" id="editPanel"><span class="fs-title">Actualizar eventualidad</span><div class="field"><label>Nuevo estado</label><div class="chips">'+['Abierto','Pendiente','Cerrado'].map(s=>'<button class="chip '+(window._dEst===s?'chip-'+s.toLowerCase():'')+'\" onclick=\"dChEst(&apos;'+s+'&apos;)\">● '+s+'</button>').join('')+'</div></div><div id="cF" style="'+(window._dEst==='Cerrado'?'':'display:none')+'"><div class="frow2"><div class="field"><label>Fecha de cierre</label><input type="date" id="dFc" value="'+(e.fc||'')+'"></div><div class="field"><label>Hora de cierre</label><input type="time" id="dHc" value="'+(e.hc||'')+'"></div></div></div><div class="field" style="margin-top:12px"><label>Solución registrada</label><textarea rows="3" id="dSol"'+(window._dEst!=='Cerrado'?' disabled style="opacity:0.45;cursor:not-allowed"':'')+'>'+( e.solucion||'')+'</textarea></div></div>':'')+'</div>'+
     '<div class="acts"><button class="btn-cancel" onclick="mostrarVista(&apos;mistareas&apos;)">← Volver</button>'+(pE?'<button class="btn-save" id="btnGDet" onclick="guardarDet()">✓ Guardar cambios</button>':'')+'</div>'+
     '</div>';
 }
@@ -655,20 +691,31 @@ async function guardarDet(){
 
 // ─── NUEVA EVENTUALIDAD ──────────────────────────────────
 function renderNE(){
-  const vias=ne.rama==='Ascendente'?VIAS_ASC:ne.rama==='Descendente'?VIAS_DESC:[];
-  // Para jefatura/supervisor: el técnico responsable es seleccionable (no es "YO" automáticamente)
   const esJefOSup=esSup()&&usuario.rol!=='tecnico';
   const tecsDisponibles=empleadosList.filter(e=>e.activo==='Si'&&e.titulo);
 
+  // FIX: Vías dinámicas por peaje (igual que React VIAS_POR_PEAJE)
+  const viaConfig=VIAS_POR_PEAJE[ne.peaje]||null;
+  const vias=viaConfig
+    ? ne.rama==='Ascendente'
+      ? Array.from({length:viaConfig.asc.hasta-viaConfig.asc.desde+1},(_,i)=>i+viaConfig.asc.desde)
+      : ne.rama==='Descendente'
+      ? Array.from({length:viaConfig.desc.hasta-viaConfig.desc.desde+1},(_,i)=>i+viaConfig.desc.desde)
+      : []
+    : [];
+  const viaDesdeLabel=viaConfig?(ne.rama==='Ascendente'?viaConfig.asc.desde:ne.rama==='Descendente'?viaConfig.desc.desde:viaConfig.asc.desde):1;
+  const viaHastaLabel=viaConfig?(ne.rama==='Ascendente'?viaConfig.asc.hasta:ne.rama==='Descendente'?viaConfig.desc.hasta:viaConfig.desc.hasta):65;
+  const ascLabel=viaConfig?'↑ Ascendente (Vías '+viaConfig.asc.desde+'–'+viaConfig.asc.hasta+')':'↑ Ascendente';
+  const descLabel=viaConfig?'↓ Descendente (Vías '+viaConfig.desc.desde+'–'+viaConfig.desc.hasta+')':'↓ Descendente';
+  const ambasInfo=viaConfig?'ℹ Ambas ramas · Vías '+viaConfig.asc.desde+'–'+viaConfig.asc.hasta+' (Asc) y '+viaConfig.desc.desde+'–'+viaConfig.desc.hasta+' (Desc)':'ℹ Ambas ramas';
+
   let tecsPrincipalHTML='';
   if(esJefOSup){
-    // Jefatura asigna un técnico principal desde el select
     tecsPrincipalHTML='<div class="field"><label>Técnico responsable <span class="req">*</span></label>'+
       '<select id="ne-tec-principal" onchange="ne.tecPrincipal=this.value"><option value="">Seleccioná técnico...</option>'+
       tecsDisponibles.map(e=>'<option value="'+escH(e.titulo)+'"'+(ne.tecPrincipal===e.titulo?' selected':'')+'>'+e.titulo+'</option>').join('')+
       '</select></div>';
   } else {
-    // Técnico ve su propio nombre como responsable
     tecsPrincipalHTML='<div class="tec-main"><div class="tec-av">'+usuario.initials+'</div><div style="flex:1"><div class="tec-name">'+usuario.nombre+'</div><div class="tec-sub">Técnico responsable (sesión activa)</div></div><span class="yo-badge">YO</span></div>';
   }
 
@@ -680,12 +727,16 @@ function renderNE(){
     '<div style="max-width:860px">'+
     fcard('Identificación','<div class="field"><label>Título / descripción del problema</label><input type="text" id="ne-t" value="'+escH(ne.titulo)+'" placeholder="Ej: Falla en semáforo cabina 3" oninput="ne.titulo=this.value"></div>')+
     fcard('Fechas y horarios','<div class="frow2"><div class="field"><label>Fecha de tarea <span class="req">*</span></label><input type="date" id="ne-ft" value="'+ne.ft+'" onchange="ne.ft=this.value"></div><div class="field"><label>Hora de tarea <span class="req">*</span></label><input type="time" id="ne-ht" value="'+ne.ht+'" onchange="ne.ht=this.value"></div><div class="field"><label>Fecha de cierre</label><input type="date" value="'+ne.fc+'" onchange="ne.fc=this.value"></div><div class="field"><label>Hora de cierre</label><input type="time" value="'+ne.hc+'" onchange="ne.hc=this.value"></div></div>')+
-    fcard('Turno','<div class="chips">'+[['Mañana','🌅','manana'],['Tarde','🌇','tarde'],['Noche','🌙','noche']].map(([v,i,c])=>'<button class="chip '+(ne.turno===v?'chip-'+c:'')+'" onclick="ne.turno=&apos;'+v+'&apos;;renderNE()">'+i+' '+v+'</button>').join('')+'</div>')+
-    fcard('Estado','<div class="chips">'+[['Abierto','ab'],['Pendiente','pe'],['Cerrado','ce']].map(([v,c])=>'<button class="chip '+(ne.estado===v?'chip-'+c:'')+'" onclick="ne.estado=&apos;'+v+'&apos;;renderNE()">● '+v+'</button>').join('')+'</div>')+
-    fcard('Lugar','<div class="field"><label>Peaje <span class="req">*</span></label><select onchange="ne.peaje=this.value"><option value="">Seleccioná un peaje...</option>'+PEAJES.map(p=>'<option '+(ne.peaje===p?'selected':'')+'>'+p+'</option>').join('')+'</select></div><div class="divider-form"><span>Detalle de vías</span></div><div class="chips" style="flex-wrap:nowrap">'+[['Ascendente','↑ Ascendente (Vías 1–15)','asc'],['Descendente','↓ Descendente (Vías 51–65)','desc'],['Ambas','↕ Ambas ramas','ambas']].map(([v,l,c])=>'<button class="chip-dark '+(ne.rama===v?'chipdark-'+c:'')+'" onclick="ne.rama=&apos;'+v+'&apos;;ne.viaNro=&apos;&apos;;renderNE()">'+l+'</button>').join('')+'</div>'+(ne.rama&&ne.rama!=='Ambas'?'<div class="field" style="max-width:220px;margin-top:12px"><label>Vía</label><select onchange="ne.viaNro=this.value"><option value="">Seleccioná...</option>'+vias.map(v=>'<option '+(ne.viaNro==='Vía '+v?'selected':'')+'>Vía '+v+'</option>').join('')+'</select></div>':'')+(ne.rama==='Ambas'?'<div class="via-info">ℹ Ambas ramas · Vías 1–15 (Asc) y 51–65 (Desc)</div>':'')+'')+
+    fcard('Turno','<div class="chips">'+[['Mañana','🌅','manana'],['Tarde','🌇','tarde'],['Noche','🌙','noche']].map(([v,i,c])=>'<button class="chip '+(ne.turno===v?'chip-'+c:'')+'\" onclick=\"ne.turno=&apos;'+v+'&apos;;renderNE()\">'+i+' '+v+'</button>').join('')+'</div>')+
+    fcard('Estado','<div class="chips">'+[['Abierto','ab'],['Pendiente','pe'],['Cerrado','ce']].map(([v,c])=>'<button class="chip '+(ne.estado===v?'chip-'+c:'')+'\" onclick=\"ne.estado=&apos;'+v+'&apos;;renderNE()\">● '+v+'</button>').join('')+'</div>')+
+    // FIX: Card "Tipo de evento" agregada — igual que la app React
+    fcard('Tipo de evento','<div class="field"><label>Categoría del problema</label><select onchange="ne.tipoEvento=this.value"><option value="">Seleccioná un tipo...</option>'+TIPOS_EVENTO.map(t=>'<option '+(ne.tipoEvento===t?'selected':'')+'>'+t+'</option>').join('')+'</select></div>')+
+    // FIX: Vías dinámicas según peaje seleccionado
+    fcard('Lugar','<div class="field"><label>Peaje <span class="req">*</span></label><select onchange="ne.peaje=this.value;ne.rama=&apos;&apos;;ne.viaNro=&apos;&apos;;renderNE()"><option value="">Seleccioná un peaje...</option>'+PEAJES.map(p=>'<option '+(ne.peaje===p?'selected':'')+'>'+p+'</option>').join('')+'</select></div><div class="divider-form"><span>Detalle de vías</span></div><div class="chips" style="flex-wrap:nowrap">'+[['Ascendente',ascLabel,'asc'],['Descendente',descLabel,'desc'],['Ambas','↕ Ambas ramas','ambas']].map(([v,l,c])=>'<button class="chip-dark '+(ne.rama===v?'chipdark-'+c:'')+'\" onclick=\"ne.rama=&apos;'+v+'&apos;;ne.viaNro=&apos;&apos;;renderNE()\">'+l+'</button>').join('')+'</div>'+(ne.rama&&ne.rama!=='Ambas'&&vias.length>0?'<div class="field" style="max-width:220px;margin-top:12px"><label>Vía</label><select onchange="ne.viaNro=this.value"><option value="">Seleccioná...</option>'+vias.map(v=>'<option '+(ne.viaNro==='Vía '+v?'selected':'')+'>Vía '+v+'</option>').join('')+'</select></div>':'')+(ne.rama==='Ambas'&&viaConfig?'<div class="via-info">'+ambasInfo+'</div>':'')+'')+
     fcard('Técnicos',tecsPrincipalHTML+ne.extraTecs.map((t,i)=>'<div class="extra-tec"><select onchange="ne.extraTecs['+i+']=this.value"><option value="">Seleccioná técnico...</option>'+tecsFiltrados.map(e=>'<option '+(t===e.titulo?'selected':'')+'>'+e.titulo+'</option>').join('')+'</select><button class="remove-tec" onclick="ne.extraTecs.splice('+i+',1);renderNE()">✕</button></div>').join('')+(ne.extraTecs.length<3?'<button class="add-tec" onclick="ne.extraTecs.push(&apos;&apos;);renderNE()">+ Agregar técnico adicional</button>':'')+'')+
     fcard('Detalle del problema','<div class="field"><textarea rows="3" placeholder="Describí el problema encontrado..." oninput="ne.problema=this.value">'+escH(ne.problema)+'</textarea></div>')+
     fcard('Detalle de la solución','<div class="field"><textarea rows="3" '+(ne.estado!=='Cerrado'?'disabled style="opacity:0.45;cursor:not-allowed"':'')+' placeholder="Disponible solo cuando el estado es Cerrado..." oninput="ne.solucion=this.value">'+escH(ne.solucion)+'</textarea></div>'+(ne.estado!=='Cerrado'?'<div class="sol-nota">Solo editable cuando el estado es <strong>Cerrado</strong></div>':''))+
+    '<div class="gps-note">📍 La ubicación GPS se capturará automáticamente al guardar</div>'+
     '<div class="acts"><button class="btn-cancel" onclick="mostrarVista(&apos;mistareas&apos;)">Cancelar</button><button class="btn-save" id="btnGNE" onclick="guardarNE()">✓ Guardar eventualidad</button></div>'+
     '</div>';
 }
@@ -694,22 +745,60 @@ function escH(s){return(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replac
 
 async function guardarNE(){
   const esJefOSup=esSup()&&usuario.rol!=='tecnico';
-  const tecPrincipal=esJefOSup?(document.getElementById('ne-tec-principal')?.value||''):usuario.nombre;
+  // FIX: lee tecPrincipal del DOM o del objeto ne (consistente)
+  const tecPrincipal=esJefOSup?(document.getElementById('ne-tec-principal')?.value||ne.tecPrincipal||''):usuario.nombre;
   if(!ne.titulo.trim()||!ne.ft||!ne.ht||!ne.peaje){toast('Completá los campos obligatorios','err');return;}
   if(esJefOSup&&!tecPrincipal){toast('Seleccioná un técnico responsable','err');return;}
   if(ne.estado==='Cerrado'&&(!ne.fc||!ne.hc)){toast('Completá fecha y hora de cierre','err');return;}
   if(ne.estado==='Cerrado'&&!ne.solucion.trim()){toast('Ingresá el detalle de la solución','err');return;}
   document.getElementById('btnGNE').disabled=true;document.getElementById('btnGNE').textContent='Guardando...';
+
   const tecs=[tecPrincipal,...ne.extraTecs.filter(Boolean)];
-  const lSub=ne.viaNro?ne.viaNro:(ne.rama==='Ambas'?'Vías 1–15 y 51–65':ne.rama?'Vías '+(ne.rama==='Ascendente'?'1':'51')+'–'+(ne.rama==='Ascendente'?'15':'65'):'');
-  const p={titulo:ne.titulo.trim(),fecha_de_tarea:ne.ft,hora_de_tarea:ne.ht,estado:ne.estado,turno:ne.turno,lugar_de_tarea:ne.peaje+(lSub?' · '+lSub:''),via:ne.rama?(ne.rama+(ne.viaNro?' · '+ne.viaNro:'')):'' ,detalle_del_problema:ne.problema.trim(),detalle_de_solucion:ne.solucion.trim(),tecnico1:tecs[0]||'',tecnico2:tecs[1]||'',tecnico3:tecs[2]||'',tecnico4:tecs[3]||'',tecnicos_involucrados:tecs.join(', ')};
-  if(ne.fc)p.fecha_de_cierre=ne.fc+'T00:00:00Z';if(ne.hc)p.hora_de_cierre=ne.hc;
+  const viaConfig=VIAS_POR_PEAJE[ne.peaje]||null;
+  const viaDesde=viaConfig?(ne.rama==='Ascendente'?viaConfig.asc.desde:ne.rama==='Descendente'?viaConfig.desc.desde:viaConfig.asc.desde):'';
+  const viaHasta=viaConfig?(ne.rama==='Ascendente'?viaConfig.asc.hasta:ne.rama==='Descendente'?viaConfig.desc.hasta:viaConfig.desc.hasta):'';
+  const lSub=ne.viaNro?ne.viaNro:(ne.rama==='Ambas'&&viaConfig?'Vías '+viaConfig.asc.desde+'–'+viaConfig.asc.hasta+' y '+viaConfig.desc.desde+'–'+viaConfig.desc.hasta:ne.rama&&viaDesde?'Vías '+viaDesde+'–'+viaHasta:'');
+
+  // FIX: payload completo igual al de la app React — incluye tipo_de_evento, email_tecnico, asignado_por_supervisor
+  const p={
+    titulo:ne.titulo.trim(),
+    fecha_de_tarea:ne.ft,hora_de_tarea:ne.ht,
+    estado:ne.estado,turno:ne.turno,
+    tipo_de_evento:ne.tipoEvento,
+    lugar_de_tarea:ne.peaje+(lSub?' · '+lSub:''),
+    via:ne.rama?(ne.rama+(ne.viaNro?' · '+ne.viaNro:viaDesde?' · Vías '+viaDesde+'–'+viaHasta:'')):'',
+    detalle_del_problema:ne.problema.trim(),
+    detalle_de_solucion:ne.solucion.trim(),
+    tecnico1:tecs[0]||'',tecnico2:tecs[1]||'',tecnico3:tecs[2]||'',tecnico4:tecs[3]||'',
+    tecnicos_involucrados:tecs.join(', '),
+    asignado_por_supervisor:esJefOSup,
+    // FIX: emails de los técnicos para que Power Automate envíe el correo
+    email_tecnico:esJefOSup?(empleadosList.find(e=>e.titulo===tecPrincipal)?.email||''):'',
+    email_tecnico2:empleadosList.find(e=>e.titulo===tecs[1])?.email||'',
+    email_tecnico3:empleadosList.find(e=>e.titulo===tecs[2])?.email||'',
+    email_tecnico4:empleadosList.find(e=>e.titulo===tecs[3])?.email||'',
+  };
+  if(ne.fc)p.fecha_de_cierre=ne.fc+'T00:00:00Z';
+  if(ne.hc)p.hora_de_cierre=ne.hc;
+
   try{
     const r=await fetch(FLOW_GUARDAR,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(p)});
     const rd=await r.json();
-    eventos.unshift({id:'EVT-'+String(eventos.length+1).padStart(3,'0'),sp_id:rd?.sp_id||null,titulo:ne.titulo.trim(),ft:ne.ft,ht:ne.ht,fc:ne.fc||'',hc:ne.hc||'',estado:ne.estado,turno:ne.turno,lugarTipo:'peaje',lugarNombre:ne.peaje,lugarSub:lSub,rama:ne.rama,problema:ne.problema.trim(),solucion:ne.solucion.trim(),tecs,owner:tecs[0]||usuario.nombre});
-    toast('✓ Eventualidad guardada en SharePoint');setTimeout(()=>mostrarVista('mistareas'),1200);
-  }catch{toast('Error al guardar','err');document.getElementById('btnGNE').disabled=false;document.getElementById('btnGNE').textContent='✓ Guardar eventualidad';}
+    eventos.unshift({
+      id:'EVT-'+String(eventos.length+1).padStart(3,'0'),sp_id:rd?.sp_id||null,
+      titulo:ne.titulo.trim(),ft:ne.ft,ht:ne.ht,fc:ne.fc||'',hc:ne.hc||'',
+      estado:ne.estado,turno:ne.turno,tipoEvento:ne.tipoEvento,
+      lugarTipo:'peaje',lugarNombre:ne.peaje,lugarSub:lSub,
+      rama:ne.rama,problema:ne.problema.trim(),solucion:ne.solucion.trim(),
+      tecs,owner:tecs[0]||usuario.nombre
+    });
+    toast('✓ Eventualidad guardada en SharePoint');
+    setTimeout(()=>mostrarVista('mistareas'),1200);
+  }catch{
+    toast('Error al guardar','err');
+    document.getElementById('btnGNE').disabled=false;
+    document.getElementById('btnGNE').textContent='✓ Guardar eventualidad';
+  }
 }
 
 // ─── REPORTE DE TURNO ────────────────────────────────────
@@ -739,7 +828,7 @@ function rpRes(){
   if(rp.resultado.length===0)return'<div class="empty-state"><div class="empty-ico">🔍</div><div class="empty-txt">Sin resultados</div></div>';
   const c={t:rp.resultado.length,a:rp.resultado.filter(e=>e.estado==='Abierto').length,p:rp.resultado.filter(e=>e.estado==='Pendiente').length,ce:rp.resultado.filter(e=>e.estado==='Cerrado').length};
   const st='<div class="stats" style="margin-bottom:18px">'+'<div class="sc sc-aub"><div class="sc-label">Total período</div><div class="sc-val">'+c.t+'</div><div class="sc-sub">eventualidades</div></div>'+'<div class="sc sc-v"><div class="sc-label">Abiertas</div><div class="sc-val">'+c.a+'</div><div class="sc-sub">requieren atención</div></div>'+'<div class="sc sc-a"><div class="sc-label">Pendientes</div><div class="sc-val">'+c.p+'</div><div class="sc-sub">en seguimiento</div></div>'+'<div class="sc sc-r"><div class="sc-label">Cerradas</div><div class="sc-val">'+c.ce+'</div><div class="sc-sub">finalizadas</div></div>'+'</div>';
-  const cards=rp.resultado.map(e=>'<div class="evt '+(e.estado==='Abierto'?'evt-abierto':e.estado==='Pendiente'?'evt-pendiente':'evt-cerrado')+'">'+'<div class="evt-head"><div class="evt-head-top"><div><div class="evt-titulo">'+e.titulo+'</div><div class="evt-meta">'+e.id+' · Turno '+(e.turno||'—')+'</div></div><span class="'+bdg(e.estado)+'" style="font-size:12px;padding:5px 13px;flex-shrink:0">'+e.estado+'</span></div><div class="evt-tecs">'+e.tecs.map(t=>'<span class="evt-tec">'+t+'</span>').join('')+'</div></div>'+'<div class="evt-sep"></div>'+'<div class="lugar-bloque" style="padding:10px 18px 12px"><div class="lugar-tipo '+(e.lugarTipo==='via'?'lugar-via':'lugar-peaje')+'"><div class="lugar-ico">'+(e.lugarTipo==='via'?'🛣':'🏛')+'</div><div class="lugar-tipo-label">'+(e.lugarTipo==='via'?'Vía':'Peaje')+'</div></div><div><div class="lugar-nombre">'+e.lugarNombre+'</div><div class="lugar-sub">'+(e.lugarSub||'')+'</div></div></div>'+'<div class="fechas-grid"><div class="fecha-item"><div class="fecha-label">Fecha tarea</div><div class="fecha-val">'+fmt(e.ft)+'</div><div class="fecha-hora">'+(e.ht||'—')+'</div></div><div class="fecha-item"><div class="fecha-label">Fecha cierre</div><div class="fecha-val">'+(e.fc?fmt(e.fc):'Sin cerrar')+'</div><div class="fecha-hora">'+(e.hc||'—')+'</div></div><div class="fecha-item"><div class="fecha-label">Técnicos</div><div class="fecha-val">'+e.tecs.length+'</div><div class="fecha-hora">asignados</div></div></div>'+'<div class="evt-sep"></div>'+'<div class="sec-toggle" onclick="togS(this)"><div class="sec-left"><div class="sec-ico sec-ico-prob">!</div><span class="sec-lbl">Descripción del problema</span></div><span class="sec-arrow open">▾</span></div>'+'<div class="sec-body"><div class="sec-text">'+(e.problema||'Sin descripción registrada.')+'</div></div>'+'<div class="sec-toggle" onclick="togS(this)"><div class="sec-left"><div class="sec-ico '+(e.solucion?'sec-ico-sol':'sec-ico-empty')+'">'+(e.solucion?'✓':'—')+'</div><span class="sec-lbl">Solución registrada</span></div><span class="sec-arrow'+(e.solucion?' open':'')+'" >▾</span></div>'+(e.solucion?'<div class="sec-body"><div class="sec-text sec-text-sol">'+e.solucion+'</div></div>':'<div class="sec-body" style="display:none"><div class="sec-text sec-text-empty">Sin solución registrada aún.</div></div>')+'</div>').join('');
+  const cards=rp.resultado.map(e=>'<div class="evt '+(e.estado==='Abierto'?'evt-abierto':e.estado==='Pendiente'?'evt-pendiente':'evt-cerrado')+'">'+'<div class="evt-head"><div class="evt-head-top"><div><div class="evt-titulo">'+e.titulo+'</div><div class="evt-meta">'+e.id+' · Turno '+(e.turno||'—')+(e.tipoEvento?' · '+e.tipoEvento:'')+'</div></div><span class="'+bdg(e.estado)+'" style="font-size:12px;padding:5px 13px;flex-shrink:0">'+e.estado+'</span></div><div class="evt-tecs">'+e.tecs.map(t=>'<span class="evt-tec">'+t+'</span>').join('')+'</div></div>'+'<div class="evt-sep"></div>'+'<div class="lugar-bloque" style="padding:10px 18px 12px"><div class="lugar-tipo '+(e.lugarTipo==='via'?'lugar-via':'lugar-peaje')+'"><div class="lugar-ico">'+(e.lugarTipo==='via'?'🛣':'🏛')+'</div><div class="lugar-tipo-label">'+(e.lugarTipo==='via'?'Vía':'Peaje')+'</div></div><div><div class="lugar-nombre">'+e.lugarNombre+'</div><div class="lugar-sub">'+(e.lugarSub||'')+'</div></div></div>'+'<div class="fechas-grid"><div class="fecha-item"><div class="fecha-label">Fecha tarea</div><div class="fecha-val">'+fmt(e.ft)+'</div><div class="fecha-hora">'+(e.ht||'—')+'</div></div><div class="fecha-item"><div class="fecha-label">Fecha cierre</div><div class="fecha-val">'+(e.fc?fmt(e.fc):'Sin cerrar')+'</div><div class="fecha-hora">'+(e.hc||'—')+'</div></div><div class="fecha-item"><div class="fecha-label">Técnicos</div><div class="fecha-val">'+e.tecs.length+'</div><div class="fecha-hora">asignados</div></div></div>'+'<div class="evt-sep"></div>'+'<div class="sec-toggle" onclick="togS(this)"><div class="sec-left"><div class="sec-ico sec-ico-prob">!</div><span class="sec-lbl">Descripción del problema</span></div><span class="sec-arrow open">▾</span></div>'+'<div class="sec-body"><div class="sec-text">'+(e.problema||'Sin descripción registrada.')+'</div></div>'+'<div class="sec-toggle" onclick="togS(this)"><div class="sec-left"><div class="sec-ico '+(e.solucion?'sec-ico-sol':'sec-ico-empty')+'">'+(e.solucion?'✓':'—')+'</div><span class="sec-lbl">Solución registrada</span></div><span class="sec-arrow'+(e.solucion?' open':'')+'" >▾</span></div>'+(e.solucion?'<div class="sec-body"><div class="sec-text sec-text-sol">'+e.solucion+'</div></div>':'<div class="sec-body" style="display:none"><div class="sec-text sec-text-empty">Sin solución registrada aún.</div></div>')+'</div>').join('');
   return st+cards;
 }
 function togS(el){const a=el.querySelector('.sec-arrow'),b=el.nextElementSibling;if(b&&b.classList.contains('sec-body')){const o=b.style.display!=='none'&&b.style.display!=='';b.style.display=o?'none':'';a.className='sec-arrow'+(o?'':' open');}}
@@ -756,26 +845,22 @@ async function exportarPDF(){
     const pageW=210,pageH=297,margin=10;
     const imgW=pageW-margin*2;
     const imgH=(canvas.height*imgW)/canvas.width;
-    // Header
     pdf.setFillColor(2,45,64);pdf.rect(0,0,210,22,'F');
     pdf.setTextColor(255,255,255);pdf.setFontSize(13);pdf.setFont('helvetica','bold');
     pdf.text('SVIA — Reporte de Turno',margin,10);
     pdf.setFontSize(8);pdf.setFont('helvetica','normal');
-    const hoy=new Date().toLocaleDateString('es-AR',{day:'2-digit',month:'2-digit',year:'numeric'});
-    pdf.text('Generado: '+hoy+' · '+rp.resultado.length+' eventualidades',margin,16);
-    // Filters summary
+    const hoyStr=new Date().toLocaleDateString('es-AR',{day:'2-digit',month:'2-digit',year:'numeric'});
+    pdf.text('Generado: '+hoyStr+' · '+rp.resultado.length+' eventualidades',margin,16);
     let filtros=[];
     if(rp.turno)filtros.push('Turno: '+rp.turno);
     if(rp.desde)filtros.push('Desde: '+rp.desde);if(rp.hasta)filtros.push('Hasta: '+rp.hasta);
     if(rp.estado)filtros.push('Estado: '+rp.estado);if(rp.tec)filtros.push('Técnico: '+rp.tec);
     if(filtros.length){pdf.setTextColor(0,174,195);pdf.setFontSize(7);pdf.text(filtros.join('  |  '),margin,20);}
-    // Content image
     const startY=25;
     const availH=pageH-startY-margin;
     if(imgH<=availH){
       pdf.addImage(imgData,'JPEG',margin,startY,imgW,imgH);
     } else {
-      // Multi-page
       let remaining=imgH,srcY=0;
       while(remaining>0){
         const sliceH=Math.min(availH,remaining);
@@ -789,12 +874,11 @@ async function exportarPDF(){
         if(remaining>0)pdf.addPage();
       }
     }
-    pdf.save('SVIA-Reporte-'+hoy.replace(/\//g,'-')+'.pdf');
+    pdf.save('SVIA-Reporte-'+hoyStr.replace(/\//g,'-')+'.pdf');
     toast('✓ PDF generado');
   }catch(e){console.error(e);toast('Error al generar PDF','err');}
   finally{btn.disabled=false;btn.textContent='📄 Exportar PDF';}
 }
-
 
 // ─── KPI DASHBOARD ───────────────────────────────────────
 function getKpiFiltradas(){
@@ -807,51 +891,39 @@ function getKpiFiltradas(){
 function renderKPI(){
   const f=getKpiFiltradas();
   const total=f.length,abiertas=f.filter(e=>e.estado==='Abierto').length,pendientes=f.filter(e=>e.estado==='Pendiente').length,cerradas=f.filter(e=>e.estado==='Cerrado').length;
-
-  // Por técnico
   const mapTec={};
   f.forEach(e=>e.tecs.forEach(t=>{if(!t)return;if(!mapTec[t])mapTec[t]={total:0,abierto:0,pendiente:0,cerrado:0};mapTec[t].total++;mapTec[t][e.estado.toLowerCase()]++;}));
   const porTec=Object.entries(mapTec).sort((a,b)=>b[1].total-a[1].total);
   const maxTec=porTec[0]?.[1].total||1;
-
-  // Por peaje
   const mapPeaje={};
   f.forEach(e=>{const p=e.lugarNombre||'Sin especificar';if(!mapPeaje[p])mapPeaje[p]=0;mapPeaje[p]++;});
   const porPeaje=Object.entries(mapPeaje).sort((a,b)=>b[1]-a[1]);
   const maxPeaje=porPeaje[0]?.[1]||1;
-
-  // Por turno
-  const mapTurno={Mañana:0,Tarde:0,Noche:0};
-  f.forEach(e=>{const t=e.turno||'';if(mapTurno[t]!==undefined)mapTurno[t]++;});
+  const mapTurno={'Mañana':0,'Tarde':0,'Noche':0,'Sin turno':0};
+  f.forEach(e=>{const t=e.turno||'';if(t==='Mañana'||t==='Tarde'||t==='Noche')mapTurno[t]++;else mapTurno['Sin turno']++;});
   const porTurno=Object.entries(mapTurno).filter(([,v])=>v>0);
   const totalTurno=porTurno.reduce((a,[,v])=>a+v,0)||1;
-  const turnoColors={'Mañana':{bg:'#FFF8E1',border:'#F9A825',color:'#F9A825'},'Tarde':{bg:'#FBE9E7',border:'#E64A19',color:'#E64A19'},'Noche':{bg:'#EDE7F6',border:'#7B1FA2',color:'#7B1FA2'}};
-
-  // Tiempo promedio
+  const turnoColors=darkMode
+    ? {'Mañana':{bg:'#241C00',border:'#F9A825',color:'#FFD54F'},'Tarde':{bg:'#2A0A00',border:'#E64A19',color:'#FF8A65'},'Noche':{bg:'#1A0A2E',border:'#7B1FA2',color:'#CE93D8'},'Sin turno':{bg:'#1E2A32',border:'#6E8090',color:'#B8C8D4'}}
+    : {'Mañana':{bg:'#FFF8E1',border:'#F9A825',color:'#5D4037'},'Tarde':{bg:'#FBE9E7',border:'#E64A19',color:'#BF360C'},'Noche':{bg:'#EDE7F6',border:'#7B1FA2',color:'#4A148C'},'Sin turno':{bg:'#F4F4F4',border:'#838383',color:'#555'}};
   const cerr=f.filter(e=>e.estado==='Cerrado'&&e.ft&&e.fc);
   let tiempoPromedio=null;
   if(cerr.length){const tot=cerr.reduce((acc,e)=>acc+Math.max(0,(new Date(e.fc)-new Date(e.ft))/86400000),0);tiempoPromedio=(tot/cerr.length).toFixed(1);}
-
-  const pbtn=(k,l)=>'<button class="kpi-pbtn'+(kpiPeriodo===k?' on':'')+'" onclick="kpiPeriodo=&apos;'+k+'&apos;;renderKPI()">'+l+'</button>';
-
+  const pbtn=(k,l)=>'<button class="kpi-pbtn'+(kpiPeriodo===k?' on':'')+'\" onclick=\"kpiPeriodo=&apos;'+k+'&apos;;renderKPI()\">'+l+'</button>';
   const barTec=porTec.length===0?'<div class="empty">Sin datos</div>':porTec.map(([n,c])=>
     '<div class="kpi-bar-row"><div class="kpi-bar-label">'+n.split(',')[0]+'</div><div class="kpi-bar-track"><div class="kpi-bar-fill" style="width:'+(c.total/maxTec*100)+'%;background:var(--aub)"></div></div><div class="kpi-bar-val">'+c.total+'</div><div class="kpi-bar-badges">'+
     (c.abierto>0?'<span class="kpi-bb" style="background:var(--verde-light);color:var(--verde-dark)">'+c.abierto+'A</span>':'')+
     (c.pendiente>0?'<span class="kpi-bb" style="background:var(--amber-light);color:var(--amber-dark)">'+c.pendiente+'P</span>':'')+
     (c.cerrado>0?'<span class="kpi-bb" style="background:var(--rojo-light);color:var(--rojo-dark)">'+c.cerrado+'C</span>':'')+
     '</div></div>').join('');
-
   const barPeaje=porPeaje.length===0?'<div class="empty">Sin datos</div>':porPeaje.map(([p,c])=>
     '<div class="kpi-bar-row"><div class="kpi-bar-label">'+p+'</div><div class="kpi-bar-track"><div class="kpi-bar-fill" style="width:'+(c/maxPeaje*100)+'%;background:var(--aub-dark)"></div></div><div class="kpi-bar-val">'+c+'</div></div>').join('');
-
   const turnoCards=porTurno.map(([t,c])=>{const tc=turnoColors[t]||{bg:'#F4F4F4',border:'#838383',color:'#838383'};const pct=Math.round(c/totalTurno*100);return'<div class="kpi-turno-card" style="background:'+tc.bg+';border-color:'+tc.border+'"><div class="kpi-turno-nombre" style="color:'+tc.color+'">'+t+'</div><div class="kpi-turno-val" style="color:'+tc.color+'">'+c+'</div><div class="kpi-turno-pct" style="color:'+tc.color+'">'+pct+'%</div><div class="kpi-turno-bar"><div style="width:'+pct+'%;height:100%;background:'+tc.border+';border-radius:3px"></div></div></div>';}).join('');
-
   const tiempoHtml=tiempoPromedio===null
     ?'<div class="empty">Sin eventualidades cerradas en el período</div>'
     :'<div class="kpi-tiempo-hero"><div class="kpi-tiempo-val">'+tiempoPromedio+'</div><div class="kpi-tiempo-dias">días promedio de resolución</div></div>'+
      '<div class="kpi-tiempo-stats"><div><div class="kpi-tiempo-stat-val">'+cerradas+'</div><div class="kpi-tiempo-stat-label">Cerradas</div></div><div><div class="kpi-tiempo-stat-val">'+pendientes+'</div><div class="kpi-tiempo-stat-label">Pendientes</div></div><div><div class="kpi-tiempo-stat-val">'+abiertas+'</div><div class="kpi-tiempo-stat-label">Abiertas</div></div></div>'+
      cerr.slice(0,5).map(e=>{const dias=Math.max(0,Math.round((new Date(e.fc)-new Date(e.ft))/86400000));const col=dias<=1?'var(--verde)':dias<=3?'var(--amber)':'var(--rojo)';return'<div class="kpi-tiempo-row"><div class="kpi-tiempo-row-titulo">'+e.titulo+'</div><div class="kpi-tiempo-row-dias" style="color:'+col+'">'+dias+'d</div></div>';}).join('');
-
   document.getElementById('mainContent').innerHTML=
     '<div class="kpi-wrap">'+
     '<div class="kpi-header"><div><div class="kpi-header-title">📊 Dashboard KPIs — SVIA</div><div class="kpi-header-sub">'+f.length+' eventualidades en el período seleccionado</div></div>'+
@@ -883,30 +955,26 @@ function renderGestion(){
     return true;
   });
   const cTodos=empleadosList.length,cAct=empleadosList.filter(e=>e.activo==='Si').length,cInact=empleadosList.filter(e=>e.activo==='No').length;
-
-  const filtroBtn=(k,l)=>'<button class="ge-fc'+(geFiltro===k?' on':'')+'" onclick="geFiltro=&apos;'+k+'&apos;;renderGestion()">'+l+'</button>';
-
+  const filtroBtn=(k,l)=>'<button class="ge-fc'+(geFiltro===k?' on':'')+'\" onclick=\"geFiltro=&apos;'+k+'&apos;;renderGestion()\">'+l+'</button>';
   const rolBadge=(rol)=>{
     const map={jefatura:'background:#EDE7F6;border:1px solid #7B1FA2;color:#4A148C',coordinador:'background:#E0F6FA;border:1px solid #00AEC3;color:#024560',supervisor:'background:#FFF8E1;border:1px solid #F9A825;color:#7A5800',técnico:'background:#E8F5E9;border:1px solid #2E7D52;color:#1B5E20'};
     const s=map[(rol||'').toLowerCase()]||'background:#F0F2F5;border:1px solid #ccc;color:#555';
     return'<span style="'+s+';border-radius:5px;padding:3px 10px;font-size:11px;font-weight:700">'+( rol||'—')+'</span>';
   };
-
   const rows=lista.length===0?'<tr><td colspan="7" class="empty">No hay empleados</td></tr>':
     lista.map(emp=>'<tr class="trow"><td><div class="td-main">'+emp.titulo+'</div></td><td><span class="legajo-badge">'+(emp.legajo||'—')+'</span></td><td><span class="puesto-badge">'+(emp.puesto||'—')+'</span></td><td>'+rolBadge(emp.rol)+'</td>'+
     '<td><button class="activo-btn '+(emp.activo==='Si'?'activo-si':'activo-no')+'" onclick="toggleActivo('+emp.sp_id+')" '+(esSup()?'':'disabled')+'>'+( emp.activo==='Si'?'● Activo':'○ Inactivo')+'</button></td>'+
     '<td style="font-size:11px;color:var(--gray)">'+(emp.email||'—')+'</td>'+
     '<td>'+(esSup()?'<button class="edit-btn" onclick="abrirEditarEmp('+emp.sp_id+')">✏️</button>':'')+'</td></tr>').join('');
-
   document.getElementById('mainContent').innerHTML=
     '<div class="ge-wrap">'+
     '<div class="ge-header"><div><div class="ge-header-title">👥 Gestión de Empleados SVIA</div><div class="ge-header-sub">Administrá el acceso del equipo técnico</div></div>'+
     (esSup()?'<button class="ge-btn-nuevo" onclick="abrirNuevoEmp()">+ Nuevo empleado</button>':'')+
     '</div>'+
     '<div class="stats" style="grid-template-columns:repeat(3,1fr)">'+
-    '<div class="sc sc-aub'+(geFiltro==='todos'?' active':'')+'" onclick="geFiltro=&apos;todos&apos;;renderGestion()"><div class="sc-label">Total</div><div class="sc-val">'+cTodos+'</div></div>'+
-    '<div class="sc sc-v'+(geFiltro==='activos'?' active':'')+'" onclick="geFiltro=&apos;activos&apos;;renderGestion()"><div class="sc-label">Activos</div><div class="sc-val">'+cAct+'</div></div>'+
-    '<div class="sc sc-r'+(geFiltro==='inactivos'?' active':'')+'" onclick="geFiltro=&apos;inactivos&apos;;renderGestion()"><div class="sc-label">Inactivos</div><div class="sc-val">'+cInact+'</div></div>'+
+    '<div class="sc sc-aub'+(geFiltro==='todos'?' active':'')+'\" onclick=\"geFiltro=&apos;todos&apos;;renderGestion()\"><div class="sc-label">Total</div><div class="sc-val">'+cTodos+'</div></div>'+
+    '<div class="sc sc-v'+(geFiltro==='activos'?' active':'')+'\" onclick=\"geFiltro=&apos;activos&apos;;renderGestion()\"><div class="sc-label">Activos</div><div class="sc-val">'+cAct+'</div></div>'+
+    '<div class="sc sc-r'+(geFiltro==='inactivos'?' active':'')+'\" onclick=\"geFiltro=&apos;inactivos&apos;;renderGestion()\"><div class="sc-label">Inactivos</div><div class="sc-val">'+cInact+'</div></div>'+
     '</div>'+
     '<div class="ge-filtros">'+filtroBtn('todos','Todos')+filtroBtn('jefatura','Jefatura')+filtroBtn('coordinador','Coordinador')+filtroBtn('supervisor','Supervisor')+filtroBtn('técnico','Técnico')+'</div>'+
     '<div class="tw"><table><thead><tr><th>Empleado</th><th>Legajo</th><th>Puesto</th><th>Rol</th><th>Estado</th><th>Email</th><th></th></tr></thead><tbody>'+rows+'</tbody></table></div>'+
