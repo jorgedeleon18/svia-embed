@@ -57,6 +57,8 @@ body.dark .ge-fc{background:#0D1820;border-color:#1E2E3A;color:#6E8090}
 body.dark .fc:hover,.body.dark .ge-fc:hover{border-color:var(--aub);color:var(--aub)}
 body.dark .field input,body.dark .field select,body.dark .field textarea,
 body.dark .filtro-item input,body.dark .filtro-item select{background:#091420;border-color:#1E2E3A;color:#B8C8D4}
+body.dark input[type="date"]::-webkit-calendar-picker-indicator,
+body.dark input[type="time"]::-webkit-calendar-picker-indicator{filter:invert(1);opacity:0.7}
 body.dark .det-card-val,body.dark .det-card-label,body.dark .det-texto,body.dark .lugar-nombre{color:#B8C8D4}
 body.dark .lugar-sub{color:#6E8090}
 body.dark .kpi-bar-label,body.dark .kpi-tiempo-row-titulo,body.dark .ge-header-title,body.dark .kpi-header-title{color:#B8C8D4}
@@ -145,6 +147,8 @@ body.dark .evt-cerrado{background:linear-gradient(135deg,#2A0D0D 0%,#0D1820 40%)
 /* Formularios */
 body.dark .field input,body.dark .field select,body.dark .field textarea,
 body.dark .filtro-item input,body.dark .filtro-item select{background:#091420;border-color:#1E2E3A;color:#B8C8D4}
+body.dark input[type="date"]::-webkit-calendar-picker-indicator,
+body.dark input[type="time"]::-webkit-calendar-picker-indicator{filter:invert(1);opacity:0.7}
 /* Chips */
 body.dark .chip{background:#0D1820;border-color:#1E2E3A;color:#6E8090}
 body.dark .chip-dark{background:#0D1820;border-color:#1E2E3A;color:#6E8090}
@@ -747,7 +751,7 @@ function renderDet(){
     '<div class="acts"><button class="btn-cancel" onclick="mostrarVista(&apos;mistareas&apos;)">← Volver</button>'+(pE?'<button class="btn-save" id="btnGDet" onclick="guardarDet()">✓ Guardar cambios</button>':'')+'</div>'+
     '</div>';
 }
-function dChEst(s){window._dEst=s;document.querySelectorAll('#editPanel .chip').forEach(el=>{el.className='chip';});const clsMap={'Abierto':'ab','Pendiente':'pe','Cerrado':'ce'};event.target.className='chip chip-'+(clsMap[s]||s.toLowerCase());const cf=document.getElementById('cF');if(cf)cf.style.display=s==='Cerrado'?'':'none';const sol=document.getElementById('dSol');if(sol){sol.disabled=s!=='Cerrado';sol.style.opacity=s!=='Cerrado'?'0.45':'1';}}
+function dChEst(s){window._dEst=s;document.querySelectorAll('#editPanel .chip').forEach(el=>{el.className='chip';});const clsMap={'Abierto':'ab','Pendiente':'pe','Cerrado':'ce'};event.target.className='chip chip-'+(clsMap[s]||s.toLowerCase());const cf=document.getElementById('cF');if(cf)cf.style.display=s==='Cerrado'?'':'none';const sol=document.getElementById('dSol');if(sol){sol.disabled=s!=='Cerrado';sol.style.opacity=s!=='Cerrado'?'0.45':'1';sol.style.cursor=s!=='Cerrado'?'not-allowed':'auto';if(s==='Cerrado')sol.removeAttribute('disabled');}}
 async function guardarDet(){
   const e=eventos.find(x=>x.id===detalleId);if(!e)return;
   const est=window._dEst||e.estado,fc=document.getElementById('dFc')?.value||'',hc=document.getElementById('dHc')?.value||'',sol=document.getElementById('dSol')?.value||'';
