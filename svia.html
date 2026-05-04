@@ -734,7 +734,7 @@ function verDet(id){detalleId=id;mostrarVista('detalle');}
 function renderDet(){
   const e=eventos.find(x=>x.id===detalleId);
   if(!e){document.getElementById('mainContent').innerHTML='<div class="loading-txt">No encontrada</div>';return;}
-  const pE=usuario&&(e.owner===usuario.username||esSup());
+  const pE=usuario&&(e.owner===usuario.username||e.owner===usuario.nombre||e.tecs&&e.tecs.includes(usuario.nombre)||esSup());
   window._dEst=e.estado;
   document.getElementById('mainContent').innerHTML=
     '<div class="det-wrap">'+
