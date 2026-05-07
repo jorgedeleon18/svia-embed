@@ -58,6 +58,26 @@ html,body{height:100%;font-family:var(--fn);background:var(--gray-bg);color:var(
 #appScreen{display:none}
 .app-wrap{display:flex;height:100vh;overflow:hidden}
 
+/* RESPONSIVE — sidebar colapsable en pantallas chicas (iframe SharePoint) */
+@media (max-width: 768px){
+  .sidebar{width:52px;min-width:52px}
+  .sb-brand-sep,.sb-brand-name,.sb-brand-sub,.sb-section,.sb-item span,
+  .sb-user-info,.sb-logout{display:none!important}
+  .sb-brand{padding:14px 10px;justify-content:center}
+  .sb-brand-title{font-size:11px;text-align:center}
+  .sb-item{padding:10px;justify-content:center;gap:0}
+  .sb-item .sb-badge{display:none}
+  .sb-user{padding:10px;justify-content:center}
+  .content{padding:12px}
+  .stats{grid-template-columns:repeat(2,1fr)}
+  .kpi-quick{grid-template-columns:repeat(2,1fr)}
+  .kpi-grid2{grid-template-columns:1fr}
+  .frow2{grid-template-columns:1fr}
+  .filtros{flex-direction:column}
+  .det-grid2{grid-template-columns:1fr}
+  .topbar{padding:10px 14px}
+}
+
 /* SIDEBAR */
 .sidebar{width:230px;flex-shrink:0;background:var(--sb-bg);display:flex;flex-direction:column;height:100vh;overflow:hidden}
 .sb-brand{padding:18px 16px 14px;border-bottom:1px solid rgba(255,255,255,0.07);display:flex;align-items:center;gap:10px}
